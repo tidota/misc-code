@@ -7,6 +7,9 @@ wastetris: wastetris.o noncanonical.o
 %.o: %.cpp %.hpp
 	g++ -O2 -Wall -c $<
 
+%.o: %.cpp
+	g++ -O2 -Wall -c $<
+
 clean:
 	rm -rf *.o wastetris
 

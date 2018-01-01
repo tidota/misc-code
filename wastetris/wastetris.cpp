@@ -30,7 +30,7 @@ int main()
         if(c != 0x04)
         {
             cout << c << flush;
-        {
+        }
         else
         {
             f_continue = 0;
