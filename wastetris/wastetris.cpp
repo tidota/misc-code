@@ -1,5 +1,13 @@
+// wastetris.cpp
+//
+// This file contains the main function.
+// It uses other sub-routine parts of the code.
+// Basically, the main part just receives the user inputs and gives it to the core part.
+// 
+
 #include <iostream>
 #include "noncanonical.hpp"
+#include "game_core.hpp"
 
 using namespace std;
 
@@ -21,20 +29,14 @@ using namespace std;
 int main()
 {
     int f_fail = set_input_mode();
-
     int f_continue = (f_fail == 0)? 1: 0;
+
+    init_game();
 
     while(f_continue)
     {
         char c = readOneChar();
-        if(c != 0x04)
-        {
-            cout << c << flush;
-        }
-        else
-        {
-            f_continue = 0;
-        }
+        f_continue = play_game(c);
     }
 
     return f_fail;

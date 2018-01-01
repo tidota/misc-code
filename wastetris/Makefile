@@ -1,7 +1,7 @@
 
 all: wastetris
 
-wastetris: wastetris.o noncanonical.o
+wastetris: wastetris.o noncanonical.o game_core.o
 	g++ -o $@ $^
 
 %.o: %.cpp %.hpp
