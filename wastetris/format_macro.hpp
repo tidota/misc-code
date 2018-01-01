@@ -52,46 +52,73 @@ do{ cout << ESC << BLACK; }while(0)
 do{ cout << ESC << GREEN; }while(0)
 
 // === draw a horizontal line === //
-#define DRAW_HLINE(y,x1,x2) \
+#define DRAW_HLINE_C(y,x1,x2,c) \
 do{\
-    MOVE_CURSOR(x1,y);\
-    cout << string((x2)-(x1)+1,'-');\
-}while(0)
-// === draw a vertical line === //
-#define DRAW_VLINE(x,y1,y2) \
-do{\
-    for(int i = 0; i <= (y2) - (y1); i++)\
+    for(int i = (x1); i <= (x2); i++)\
     {\
-        MOVE_CURSOR(x,(y1)+i);\
-        cout << '|';\
+        MOVE_CURSOR(i,y);\
+        cout << c;\
     }\
 }while(0)
+#define DRAW_HLINE(y,x1,x2) DRAW_HLINE_C(y,x1,x2,'-')
+
+// === draw a vertical line === //
+#define DRAW_VLINE_C(x,y1,y2,c) \
+do{\
+    for(int i = (y1); i <= (y2); i++)\
+    {\
+        MOVE_CURSOR(x,i);\
+        cout << c;\
+    }\
+}while(0)
+#define DRAW_VLINE(x,y1,y2) DRAW_VLINE_C(x,y1,y2,'|')
 
 // === draw a rectangle === //
-#define DRAW_RECT(x1,y1,x2,y2) \
+#define DRAW_RECT_C(x1,y1,x2,y2,ch,cv,cc) \
 do{\
-    DRAW_HLINE(y1,x1,x2);\
-    DRAW_HLINE(y2,x1,x2);\
-    DRAW_VLINE(x1,y1,y2);\
-    DRAW_VLINE(x2,y1,y2);\
-    MOVE_CURSOR(x1,y1); cout << '+';\
-    MOVE_CURSOR(x1,y2); cout << '+';\
-    MOVE_CURSOR(x2,y1); cout << '+';\
-    MOVE_CURSOR(x2,y2); cout << '+';\
+    DRAW_HLINE_C(y1,x1,x2,ch);\
+    DRAW_HLINE_C(y2,x1,x2,ch);\
+    DRAW_VLINE_C(x1,y1,y2,cv);\
+    DRAW_VLINE_C(x2,y1,y2,cv);\
+    MOVE_CURSOR(x1,y1); cout << cc;\
+    MOVE_CURSOR(x1,y2); cout << cc;\
+    MOVE_CURSOR(x2,y1); cout << cc;\
+    MOVE_CURSOR(x2,y2); cout << cc;\
 }while(0)
-    
+#define DRAW_RECT(x1,y1,x2,y2) DRAW_RECT_C(x1,y1,x2,y2,'-','|','+')
+
+// === fill a rectangle === //
+#define FILL_RECT_C(x1,y1,x2,y2,c) \
+do{\
+    for(int j = (y1); j <= (y2); j++)\
+        DRAW_HLINE_C(j,x1,x2,c);\
+}while(0)
+#define FILL_RECT(x1,y1,x2,y2) FILL_RECT_C(x1,y1,x2,y2,"▮")
+
 // ====================================================================== //
 // Macros for cells
 // ====================================================================== //
 // width of a cell
-#define WCELL 2
+#define WCELL 4
 // height of a cell
-#define HCELL 1
+#define HCELL 3
 // drawing lines based on cells
-#define DRAW_HLINE_CELL(cy,cx1,cx2) DRAW_HLINE(HCELL*(cy),WCELL*(cx1),WCELL*(cx2+1)-1)
-#define DRAW_VLINE_CELL(cx,cy1,cy2) DRAW_HLINE(HCELL*(cx),WCELL*(cy1),WCELL*(cy2+1)-1)
-#define DRAW_RECT_CELL(cx1,cy1,cx2,cy2)\
-   DRAW_RECT(WCELL*(cx1),HCELL*(cy1),WCELL*(cx2+1)-1,HCELL*(cy2+1)-1)
+#define DRAW_HLINE_C_CELL(cy,cx1,cx2,c) DRAW_HLINE_C(HCELL*cy,WCELL*cx1,WCELL*(cx2+1)-1,c)
+#define DRAW_HLINE_CELL(cy,cx1,cx2) DRAW_HLINE_C_CELL(cy,cx1,cx2,'-')
+#define DRAW_VLINE_C_CELL(cx,cy1,cy2,c) DRAW_VLINE_C(WCELL*cx,HCELL*cy1,HCELL*(cy2+1)-1,c)
+#define DRAW_VLINE_CELL(cx,cy1,cy2) DRAW_VLINE_C_CELL(cx,cy1,cy2,'|')
+#define DRAW_RECT_C_CELL(cx1,cy1,cx2,cy2,ch,cv,cc)\
+   DRAW_RECT_C(WCELL*(cx1),HCELL*(cy1),WCELL*(cx2+1)-1,HCELL*(cy2+1)-1,ch,cv,cc)
+#define DRAW_RECT_CELL(cx1,cy1,cx2,cy2) DRAW_RECT_C_CELL(cx1,cy1,cx2,cy2,'-','|','+')
+#define FILL_RECT_C_CELL(cx1,cy1,cx2,cy2,c)\
+   FILL_RECT_C(WCELL*(cx1),HCELL*(cy1),WCELL*(cx2+1)-1,HCELL*(cy2+1)-1,c)
+#define FILL_RECT_CELL(cx1,cy1,cx2,cy2) FILL_RECT_C_CELL(cx1,cy1,cx2,cy2,"▮")
+#define PUT_C_CELL(cx,cy,ch,cv,cc,cf)\
+do{\
+   FILL_RECT_C_CELL(cx,cy,cx,cy,cf);\
+   DRAW_RECT_C_CELL(cx,cy,cx,cy,ch,cv,cc);\
+}while(0)
+#define PUT_CELL(cx,cy) PUT_C_CELL(cx,cy,'-','|','+',"▮")
 
 
 #endif //_FORMAT_MACRO_HPP

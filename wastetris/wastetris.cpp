@@ -39,6 +39,8 @@ int main()
         f_continue = GAME::play_game(c);
     }
 
+    cout << "END..." << endl;
+
     return f_fail;
 }
 

@@ -41,7 +41,6 @@ GAME::~GAME()
     cout << "destructor" << endl;
     
     pthread_join(update_thread,NULL);
-    pthread_exit(NULL);
 }
 
 // ================================================================================= //
@@ -88,8 +87,9 @@ int GAME::play_game(char c)
         CHANGE_COLOR_GREEN();
         MOVE_CURSOR(3,3);
         cout << "a character received: " << c << endl;
-        DRAW_RECT_CELL(4,4,10,10);
-        DRAW_RECT_CELL(12,4,14,8);
+        PUT_CELL(5,5);
+        PUT_CELL(5,6);
+        PUT_CELL(7,6);
         cout << flush;
     }
 
