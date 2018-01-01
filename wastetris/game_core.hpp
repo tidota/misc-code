@@ -17,6 +17,8 @@ private:
 
     static GAME* game;
     static void *run(void*);
+
+    char temp;
 public:
     static GAME* init_game();
     static void kill_game();

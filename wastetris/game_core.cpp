@@ -37,6 +37,8 @@ GAME::GAME()
     f_stat = 1;
     pthread_mutex_init(&mtx, NULL);
     pthread_create(&update_thread, NULL, GAME::run, (void*)this);
+
+    temp = 'a';
 }
 
 // ================================================================================= //
@@ -115,24 +117,25 @@ void GAME::kill_game()
 // ================================================================================= //
 int GAME::play_game(char c)
 {
+    pthread_mutex_lock(&mtx);
     if(c == '\x04')
     {
         CHANGE_COLOR_BLACK();
         cout << "Ctrl-D received" << endl;
-        pthread_mutex_lock(&mtx);
         f_stat = 0;
-        pthread_mutex_unlock(&mtx);
     }
     else
     {
         CHANGE_COLOR_GREEN();
-        MOVE_CURSOR(5,5);
-        cout << "a character received: " << c << endl;
+        MOVE_CURSOR(1,1);
+        temp = c;
+        cout << temp;
         PUT_CELL(5,5);
         PUT_CELL(5,6);
         PUT_CELL(7,6);
         cout << flush;
     }
+    pthread_mutex_unlock(&mtx);
 
     return f_stat;
 }
@@ -148,9 +151,11 @@ void GAME::update()
     while(isRunning())
     {
         pthread_mutex_lock(&mtx);
-        //MOVE_CURSOR(1,1);
-        //cout << "thread stat: " << isRunning() << endl;
+        temp = (temp + 1 - 'a')%26+'a';
+        MOVE_CURSOR(1,1);
+        cout << temp;
         pthread_mutex_unlock(&mtx);
+        usleep(1000);
     }
 }
 
