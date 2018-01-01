@@ -29,10 +29,10 @@
 do{ cout << ESC << CLEAR; }while(0)
 
 #define CHANGE_COLOR_BLACK() \
-do{ cout << BLACK; }while(0)
+do{ cout << ESC << BLACK; }while(0)
 
 #define CHANGE_COLOR_GREEN() \
-do{ cout << GREEN; }while(0)
+do{ cout << ESC << GREEN; }while(0)
 
 
 #endif //_FORMAT_MACRO_HPP
