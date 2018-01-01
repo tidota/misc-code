@@ -31,12 +31,12 @@ int main()
     int f_fail = set_input_mode();
     int f_continue = (f_fail == 0)? 1: 0;
 
-    init_game();
+    GAME::init_game();
 
     while(f_continue)
     {
         char c = readOneChar();
-        f_continue = play_game(c);
+        f_continue = GAME::play_game(c);
     }
 
     return f_fail;

@@ -3,11 +3,39 @@
 // This file contains the core of the game program.
 // It maintains updates of the state and displaying the results based on the given character input.
 //
+// The object of the GAME class must be singleton, so its constructor/destructor are not public.
+// To start a game, it is required to call the init_game method.
+// The user also must call the end_game method to finish.
+// But if the game is over, the object is automatically destroyed.
+//
 
+#include "game_core.hpp"
 #include <iostream>
 #include <iomanip>
 
 using namespace std;
+
+// ================================================================================= //
+// the pointer to the object is initialized with NULL.
+// so the program can tell if there is an existing one.
+// ================================================================================= //
+GAME* GAME::game = NULL;
+
+// ================================================================================= //
+// Constructor
+// ================================================================================= //
+GAME::GAME()
+{
+    cout << "constructor" << endl;
+}
+
+// ================================================================================= //
+// Destructor
+// ================================================================================= //
+GAME::~GAME()
+{
+    cout << "destructor" << endl;
+}
 
 // ================================================================================= //
 // init_game
@@ -15,8 +43,11 @@ using namespace std;
 // This function initializes the state of the game, and restarts the thread.
 // 
 // ================================================================================= //
-void init_game()
+void GAME::init_game()
 {
+    if(game != NULL)
+        delete game;
+    game = new GAME();
 }
 
 // ================================================================================= //
@@ -33,7 +64,7 @@ void init_game()
 //       others: error or the game is not running correctly
 //       
 // ================================================================================= //
-int play_game(char c)
+int GAME::play_game(char c)
 {
     int ret_value = 1;
 
@@ -41,6 +72,8 @@ int play_game(char c)
     {
         ret_value = 0;
         cout << "Ctrl-D received" << endl;
+        delete game;
+        game = NULL;
     }
     else
     {
