@@ -10,6 +10,7 @@
 //
 
 #include "game_core.hpp"
+#include "format_macro.hpp"
 #include <iostream>
 #include <iomanip>
 
@@ -71,12 +72,15 @@ int GAME::play_game(char c)
     if(c == '\x04')
     {
         ret_value = 0;
+        CHANGE_COLOR_BLACK();
         cout << "Ctrl-D received" << endl;
         delete game;
         game = NULL;
     }
     else
     {
+        CLEAR_SCREEN();
+        CHANGE_COLOR_GREEN();
         cout << "a character received: " << c << endl;
     }
 
