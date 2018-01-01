@@ -1,0 +1,3 @@
+#ifndef _FORMAT_MACRO_HPP
+#define _FORMAT_MACRO_HPP
+#endif //_FORMAT_MACRO_HPP
