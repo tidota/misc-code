@@ -4,7 +4,7 @@ all: wastetris
 wastetris: wastetris.o noncanonical.o game_core.o
 	g++ -pthread -o $@ $^
 
-game_core.o: game_core.cpp game_core.hpp
+game_core.o: game_core.cpp game_core.hpp format_macro.hpp
 	g++ -O2 -Wall -c $<
 
 noncanonical.o: noncanonical.cpp noncanonical.hpp

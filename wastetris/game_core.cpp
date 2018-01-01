@@ -86,8 +86,11 @@ int GAME::play_game(char c)
     else
     {
         CHANGE_COLOR_GREEN();
-        MOVE_CURSOR(4,6);
+        MOVE_CURSOR(3,3);
         cout << "a character received: " << c << endl;
+        DRAW_RECT_CELL(4,4,10,10);
+        DRAW_RECT_CELL(12,4,14,8);
+        cout << flush;
     }
 
     return ret_value;
