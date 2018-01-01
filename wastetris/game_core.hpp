@@ -6,14 +6,23 @@
 class GAME
 {
 private:
-    static GAME* game;
     GAME();
     ~GAME();
-    static void *update(void *);
+    void update();
+
+    int f_stat;
+
     pthread_t update_thread;
+    pthread_mutex_t mtx;
+
+    static GAME* game;
+    static void *run(void*);
 public:
-    static void init_game();
-    static int play_game(char c);
+    static GAME* init_game();
+    static void kill_game();
+
+    int play_game(char c);
+    int isRunning();
 };
 
 #endif //_GAME_CORE_HPP

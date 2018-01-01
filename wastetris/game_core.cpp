@@ -14,6 +14,7 @@
 #include <iostream>
 #include <iomanip>
 #include <pthread.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -25,22 +26,46 @@ GAME* GAME::game = NULL;
 
 // ================================================================================= //
 // Constructor
+//
+// It prepares a mutex and thread.
+//
 // ================================================================================= //
 GAME::GAME()
 {
     CLEAR_SCREEN();
-    cout << "constructor" << endl;
-    pthread_create(&update_thread, NULL, &GAME::update, (void*)1);
+    CURSOR_OFF();
+    f_stat = 1;
+    pthread_mutex_init(&mtx, NULL);
+    pthread_create(&update_thread, NULL, GAME::run, (void*)this);
 }
 
 // ================================================================================= //
 // Destructor
+//
+// It waits for the other thread to end, and destroys the mutex.
+//
 // ================================================================================= //
 GAME::~GAME()
 {
-    cout << "destructor" << endl;
-    
-    pthread_join(update_thread,NULL);
+    pthread_join(update_thread, NULL);
+    pthread_mutex_destroy(&mtx);
+
+    int width = 100;
+    int height = 50;
+
+    for(int i = height; i >= 1; i--)
+    {
+        if(i - 4 >= 1) DRAW_HLINE_C(i - 4, 1, 1, string(width,'#'));
+        if(i - 3 >= 1) DRAW_HLINE_C(i - 3, 1, 1, string(width,'*'));
+        if(i - 2 >= 1) DRAW_HLINE_C(i - 2, 1, 1, string(width,';'));
+        if(i - 1 >= 1) DRAW_HLINE_C(i - 1, 1, 1, string(width,'.'));
+        if(i - 0 >= 1) DRAW_HLINE_C(i - 0, 1, 1, string(width,' '));
+        usleep(40000);
+    }
+
+    CURSOR_ON();
+    MOVE_CURSOR(1,1);
+    cout << "go back to work now" << endl;
 }
 
 // ================================================================================= //
@@ -49,11 +74,29 @@ GAME::~GAME()
 // This function initializes the state of the game, and restarts the thread.
 // 
 // ================================================================================= //
-void GAME::init_game()
+GAME *GAME::init_game()
 {
     if(game != NULL)
-        delete game;
+    {
+        game->kill_game();
+    }
     game = new GAME();
+
+    return game;
+}
+
+// ================================================================================= //
+// kill_game
+// This function stops the running game and kills the thread.
+// 
+// ================================================================================= //
+void GAME::kill_game()
+{
+    if(game != NULL)
+    {
+        delete game;
+        game = NULL;
+    }
 }
 
 // ================================================================================= //
@@ -72,20 +115,18 @@ void GAME::init_game()
 // ================================================================================= //
 int GAME::play_game(char c)
 {
-    int ret_value = 1;
-
     if(c == '\x04')
     {
-        ret_value = 0;
         CHANGE_COLOR_BLACK();
         cout << "Ctrl-D received" << endl;
-        delete game;
-        game = NULL;
+        pthread_mutex_lock(&mtx);
+        f_stat = 0;
+        pthread_mutex_unlock(&mtx);
     }
     else
     {
         CHANGE_COLOR_GREEN();
-        MOVE_CURSOR(3,3);
+        MOVE_CURSOR(5,5);
         cout << "a character received: " << c << endl;
         PUT_CELL(5,5);
         PUT_CELL(5,6);
@@ -93,29 +134,49 @@ int GAME::play_game(char c)
         cout << flush;
     }
 
-    return ret_value;
+    return f_stat;
 }
+
 // ================================================================================= //
 // update
+//
+// This method takes one step to update the game status controlling mutex.
+// 
+// ================================================================================= //
+void GAME::update()
+{
+    while(isRunning())
+    {
+        pthread_mutex_lock(&mtx);
+        //MOVE_CURSOR(1,1);
+        //cout << "thread stat: " << isRunning() << endl;
+        pthread_mutex_unlock(&mtx);
+    }
+}
+
+// ================================================================================= //
+// isRunning
+//
+// return f_stat to tell if the game is running or not
+// 
+// ================================================================================= //
+int GAME::isRunning()
+{
+    return f_stat;
+}
+
+// ================================================================================= //
+// run
 //
 // This method is supposed to run on another thread.
 // It updates the game status periodically.
 // ================================================================================= //
-void *GAME::update(void* v)
+void *GAME::run(void* p_gm)
 {
-    long id = (long)v;
+    GAME* gm = (GAME*)p_gm;
 
-    if(id == 1)
-    {
-        cout << "id: 1" << endl;
-
-    }
-    else
-    {
-        cout << "id: " << id << endl;
-    }
+    gm->update();
 
     pthread_exit(NULL);
 }
-
 

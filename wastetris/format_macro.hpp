@@ -9,7 +9,6 @@ using namespace std;
 // basic definitions for escape sequences to provide formats
 // ====================================================================== //
 
-
 // starting character for escape sequences
 #define ESC '\x001B'
 
@@ -32,6 +31,10 @@ using namespace std;
 // ====================================================================== //
 // Macros
 // ====================================================================== //
+// === cursor on === //
+#define CURSOR_ON()  do{ cout << ESC << "[?25h"; }while(0)
+// === cursor off === //
+#define CURSOR_OFF() do{ cout << ESC << "[?25l"; }while(0)
 // === move the cursor to the given position === //
 // note: the position is specified by 1-index (it starts with 1, not 0)
 #define MOVE_CURSOR(x,y) \
@@ -54,9 +57,9 @@ do{ cout << ESC << GREEN; }while(0)
 // === draw a horizontal line === //
 #define DRAW_HLINE_C(y,x1,x2,c) \
 do{\
-    for(int i = (x1); i <= (x2); i++)\
+    for(int i_draw_hline = (x1); i_draw_hline <= (x2); i_draw_hline++)\
     {\
-        MOVE_CURSOR(i,y);\
+        MOVE_CURSOR(i_draw_hline,y);\
         cout << c;\
     }\
 }while(0)
@@ -65,9 +68,9 @@ do{\
 // === draw a vertical line === //
 #define DRAW_VLINE_C(x,y1,y2,c) \
 do{\
-    for(int i = (y1); i <= (y2); i++)\
+    for(int i_draw_vline = (y1); i_draw_vline <= (y2); i_draw_vline++)\
     {\
-        MOVE_CURSOR(x,i);\
+        MOVE_CURSOR(x,i_draw_vline);\
         cout << c;\
     }\
 }while(0)

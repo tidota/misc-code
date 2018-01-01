@@ -31,15 +31,17 @@ int main()
     int f_fail = set_input_mode();
     int f_continue = (f_fail == 0)? 1: 0;
 
-    GAME::init_game();
+    GAME* gm;
+
+    gm = GAME::init_game();
 
     while(f_continue)
     {
         char c = readOneChar();
-        f_continue = GAME::play_game(c);
+        f_continue = gm->play_game(c);
     }
 
-    cout << "END..." << endl;
+    gm->kill_game();
 
     return f_fail;
 }
