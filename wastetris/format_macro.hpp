@@ -2,7 +2,7 @@
 #define _FORMAT_MACRO_HPP
 
 // ====================================================================== //
-// definitions for escape sequences to provide formats
+// basic definitions for escape sequences to provide formats
 // ====================================================================== //
 
 // starting character for escape sequences
@@ -24,15 +24,21 @@
 // clear the screen
 #define CLEAR "[2J"
 
-// === macro func === //
+// ====================================================================== //
+// Macros
+// ====================================================================== //
+// === move the cursor to the given position === //
+#define MOVE_CURSOR(x,y) \
+do{ cout << ESC << "[" << string(y) << ";" << string(x) << "H"; }while(0)
+
+// === clear the screen === //
 #define CLEAR_SCREEN() \
-do{ cout << ESC << CLEAR; }while(0)
+do{ cout << ESC << START_LOC << ESC << CLEAR; }while(0)
 
 #define CHANGE_COLOR_BLACK() \
 do{ cout << ESC << BLACK; }while(0)
 
 #define CHANGE_COLOR_GREEN() \
 do{ cout << ESC << GREEN; }while(0)
-
 
 #endif //_FORMAT_MACRO_HPP
