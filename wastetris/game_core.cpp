@@ -13,6 +13,7 @@
 #include "format_macro.hpp"
 #include <iostream>
 #include <iomanip>
+#include <pthread.h>
 
 using namespace std;
 
@@ -27,7 +28,9 @@ GAME* GAME::game = NULL;
 // ================================================================================= //
 GAME::GAME()
 {
+    CLEAR_SCREEN();
     cout << "constructor" << endl;
+    pthread_create(&update_thread, NULL, &GAME::update, (void*)1);
 }
 
 // ================================================================================= //
@@ -36,6 +39,9 @@ GAME::GAME()
 GAME::~GAME()
 {
     cout << "destructor" << endl;
+    
+    pthread_join(update_thread,NULL);
+    pthread_exit(NULL);
 }
 
 // ================================================================================= //
@@ -79,7 +85,6 @@ int GAME::play_game(char c)
     }
     else
     {
-        CLEAR_SCREEN();
         CHANGE_COLOR_GREEN();
         MOVE_CURSOR(4,6);
         cout << "a character received: " << c << endl;
@@ -87,3 +92,27 @@ int GAME::play_game(char c)
 
     return ret_value;
 }
+// ================================================================================= //
+// update
+//
+// This method is supposed to run on another thread.
+// It updates the game status periodically.
+// ================================================================================= //
+void *GAME::update(void* v)
+{
+    long id = (long)v;
+
+    if(id == 1)
+    {
+        cout << "id: 1" << endl;
+
+    }
+    else
+    {
+        cout << "id: " << id << endl;
+    }
+
+    pthread_exit(NULL);
+}
+
+
