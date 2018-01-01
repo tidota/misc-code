@@ -81,6 +81,7 @@ int GAME::play_game(char c)
     {
         CLEAR_SCREEN();
         CHANGE_COLOR_GREEN();
+        MOVE_CURSOR(4,6);
         cout << "a character received: " << c << endl;
     }
 

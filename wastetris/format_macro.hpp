@@ -28,8 +28,9 @@
 // Macros
 // ====================================================================== //
 // === move the cursor to the given position === //
+// note: the position is specified by 1-index (it starts with 1, not 0)
 #define MOVE_CURSOR(x,y) \
-do{ cout << ESC << "[" << string(y) << ";" << string(x) << "H"; }while(0)
+do{ cout << ESC << "[" << (y) << ";" << (x) << "H"; }while(0)
 
 // === clear the screen === //
 #define CLEAR_SCREEN() \
