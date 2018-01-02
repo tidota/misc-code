@@ -57,11 +57,31 @@ GAME::~GAME()
 
     for(int i = height; i >= 1; i--)
     {
-        if(i - 4 >= 1) DRAW_HLINE_C(i - 4, 1, 1, string(width,'#'));
-        if(i - 3 >= 1) DRAW_HLINE_C(i - 3, 1, 1, string(width,'*'));
-        if(i - 2 >= 1) DRAW_HLINE_C(i - 2, 1, 1, string(width,';'));
-        if(i - 1 >= 1) DRAW_HLINE_C(i - 1, 1, 1, string(width,'.'));
-        if(i - 0 >= 1) DRAW_HLINE_C(i - 0, 1, 1, string(width,' '));
+        if(i - 4 >= 1)
+        {
+            DRAW_HLINE_C(i - 4, 1, 1, string(width,'#')); 
+            FLUSH();
+        }
+        if(i - 3 >= 1)
+        {
+            DRAW_HLINE_C(i - 3, 1, 1, string(width,'*'));
+            FLUSH();
+        }
+        if(i - 2 >= 1)
+        {
+            DRAW_HLINE_C(i - 2, 1, 1, string(width,';'));
+            FLUSH();
+        }
+        if(i - 1 >= 1)
+        {
+            DRAW_HLINE_C(i - 1, 1, 1, string(width,'.'));
+            FLUSH();
+        }
+        if(i - 0 >= 1)
+        {
+            DRAW_HLINE_C(i - 0, 1, 1, string(width,' '));
+            FLUSH();
+        }
         usleep(40000);
     }
 
