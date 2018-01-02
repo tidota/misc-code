@@ -33,20 +33,35 @@ GAME* GAME::game = NULL;
 // Constructor
 //
 // It cleans up the screen for setup.
-// Then, it prepares a mutex and a thread to independently run the update function.
-// Finally, it initalizes the random number generator.
+// It also initializes the parameters for the game.
+// Then, it prepares a thread to independently run the update function.
+// Then, it initalizes the random number generator.
+// Finally, it draws the background including boxes.
 //
 // ================================================================================= //
 GAME::GAME()
 {
     CLEAR_SCREEN();
     CURSOR_OFF();
+
+    nrow = 12;
+    ncol = 10;
+
+    bin_start_x = 4;
+    bin_start_y = 4;
+
+    next_start_x = bin_start_x + ncol * WCELL + 3;
+    next_start_y = bin_start_y;
+
+    screen_width = next_start_x + 1 + 4 * WCELL + 1 + 3;
+    screen_height = bin_start_y + nrow * HCELL + 3;
+
     f_stat = 1;
+    
     t_update = thread(&GAME::update,this);
 
     srand(time(NULL));
 
-    temp = 'a';
 }
 
 // ================================================================================= //
@@ -64,8 +79,8 @@ GAME::~GAME()
     mtx.unlock();
     t_update.join();
 
-    int width = 100;
-    int height = 50;
+    int width = screen_width;
+    int height = screen_height;
 
     CHANGE_COLOR_BRED();
     char symbols[5] = {' ', '.', ';', '*', '#'};
@@ -153,20 +168,27 @@ int GAME::play_game(char c)
     }
     else
     {
-        CHANGE_COLOR_GREEN();
-        MOVE_CURSOR(1,1);
-        temp = c;
-        cout << temp;
-        PUT_CELL(5,5);
-        PUT_CELL(5,6);
-        PUT_CELL(7,6);
-        cout << flush;
-        CHANGE_COLOR_DEF();
     }
 
     mtx.unlock();
 
     return f_stat;
+}
+
+// ================================================================================= //
+// draw_background
+//
+// This method draws the background including the bin and the next box.
+//
+// ================================================================================= //
+void GAME::draw_background()
+{
+    CLEAR_SCREEN();
+    CHANGE_COLOR_CYAN();
+    DRAW_RECT(bin_start_x-1, bin_start_y-1, bin_start_x+WCELL*ncol, bin_start_y+HCELL*nrow);
+    DRAW_RECT(next_start_x-1, next_start_y-1, next_start_x+1+WCELL*4+1, next_start_y+1+HCELL*4+1);
+    FLUSH();
+    CHANGE_COLOR_DEF();
 }
 
 // ================================================================================= //
@@ -179,13 +201,16 @@ void GAME::update()
 {
     while(isRunning())
     {
+        draw_background();
         mtx.lock();
-
-        temp = (temp + 1 - 'a')%26+'a';
-        MOVE_CURSOR(1,1);
-        cout << temp;
-
         mtx.unlock();
+
+        CHANGE_COLOR_GREEN();
+        PUT_CELL(5,5);
+        PUT_CELL(5,6);
+        PUT_CELL(7,6);
+        FLUSH();
+        CHANGE_COLOR_DEF();
 
         usleep(1000);
     }

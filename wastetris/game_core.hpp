@@ -10,6 +10,20 @@ private:
     GAME();
     ~GAME();
 
+    int screen_width;
+    int screen_height;
+
+    int bin_start_x;
+    int bin_start_y;
+
+    int nrow;
+    int ncol;
+
+    int next_start_x;
+    int next_start_y;
+
+    void draw_background();
+
     int f_stat;
 
     void update();
@@ -17,8 +31,6 @@ private:
     std::mutex mtx;
 
     static GAME* game;
-
-    char temp;
 public:
     static GAME* init_game();
     static void kill_game();
