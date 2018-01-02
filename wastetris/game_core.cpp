@@ -15,6 +15,8 @@
 #include <iomanip>
 #include <pthread.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <time.h>
 
 using namespace std;
 
@@ -38,6 +40,8 @@ GAME::GAME()
     pthread_mutex_init(&mtx, NULL);
     pthread_create(&update_thread, NULL, GAME::run, (void*)this);
 
+    srand(time(NULL));
+
     temp = 'a';
 }
 
@@ -45,6 +49,8 @@ GAME::GAME()
 // Destructor
 //
 // It waits for the other thread to end, and destroys the mutex.
+//
+// It also performs the ending scene which "burns up" the screen.
 //
 // ================================================================================= //
 GAME::~GAME()
@@ -55,15 +61,31 @@ GAME::~GAME()
     int width = 100;
     int height = 50;
 
+    CHANGE_COLOR_BRED();
+    char symbols[5] = {' ', '.', ';', '*', '#'};
+    int thresholds[5] = {0, 90, 30, 5, 0};
     for(int i = height; i >= 1; i--)
     {
-        if(i - 4 >= 1) DRAW_HLINE_C(i - 4, 1, 1, string(width,'#'));
-        if(i - 3 >= 1) DRAW_HLINE_C(i - 3, 1, 1, string(width,'*'));
-        if(i - 2 >= 1) DRAW_HLINE_C(i - 2, 1, 1, string(width,';'));
-        if(i - 1 >= 1) DRAW_HLINE_C(i - 1, 1, 1, string(width,'.'));
-        if(i - 0 >= 1) DRAW_HLINE_C(i - 0, 1, 1, string(width,' '));
-        usleep(40000);
+        for(int isym = 0; isym < 5; isym++)
+        {
+            if(i - isym >= 1)
+            {
+                DRAW_HLINE_C(i - isym, 1, 1, string(width, symbols[isym]));
+                for(int icol = 1; icol <= width && thresholds[isym] != 0; icol++)
+                {
+                    int rand_v = rand()%100;
+                    if(rand_v < thresholds[isym])
+                    {
+                        MOVE_CURSOR(icol,i-isym);
+                        cout << ' ';
+                    }
+                }
+            }
+        }
+        FLUSH();
+        usleep(60000);
     }
+    CHANGE_COLOR_DEF();
 
     CURSOR_ON();
     MOVE_CURSOR(1,1);
@@ -120,8 +142,6 @@ int GAME::play_game(char c)
     pthread_mutex_lock(&mtx);
     if(c == '\x04')
     {
-        CHANGE_COLOR_BLACK();
-        cout << "Ctrl-D received" << endl;
         f_stat = 0;
     }
     else
@@ -134,6 +154,7 @@ int GAME::play_game(char c)
         PUT_CELL(5,6);
         PUT_CELL(7,6);
         cout << flush;
+        CHANGE_COLOR_DEF();
     }
     pthread_mutex_unlock(&mtx);
 
