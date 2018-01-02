@@ -31,9 +31,7 @@ int main()
     int f_fail = set_input_mode();
     int f_continue = (f_fail == 0)? 1: 0;
 
-    GAME* gm;
-
-    gm = GAME::init_game();
+    GAME* gm = GAME::init_game();
 
     while(f_continue)
     {

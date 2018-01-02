@@ -1,22 +1,22 @@
 #ifndef _GAME_CORE_HPP
 #define _GAME_CORE_HPP
 
-#include <pthread.h>
+#include <thread>
+#include <mutex>
 
 class GAME
 {
 private:
     GAME();
     ~GAME();
-    void update();
 
     int f_stat;
 
-    pthread_t update_thread;
-    pthread_mutex_t mtx;
+    void update();
+    std::thread t_update;
+    std::mutex mtx;
 
     static GAME* game;
-    static void *run(void*);
 
     char temp;
 public:

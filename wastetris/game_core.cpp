@@ -13,10 +13,13 @@
 #include "format_macro.hpp"
 #include <iostream>
 #include <iomanip>
-#include <pthread.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <time.h>
+
+#include <thread>
+#include <mutex>
+
+#include <unistd.h> // usleep
+#include <stdlib.h> // random number gen
+#include <time.h> // random number gen
 
 using namespace std;
 
@@ -29,7 +32,9 @@ GAME* GAME::game = NULL;
 // ================================================================================= //
 // Constructor
 //
-// It prepares a mutex and thread.
+// It cleans up the screen for setup.
+// Then, it prepares a mutex and a thread to independently run the update function.
+// Finally, it initalizes the random number generator.
 //
 // ================================================================================= //
 GAME::GAME()
@@ -37,8 +42,7 @@ GAME::GAME()
     CLEAR_SCREEN();
     CURSOR_OFF();
     f_stat = 1;
-    pthread_mutex_init(&mtx, NULL);
-    pthread_create(&update_thread, NULL, GAME::run, (void*)this);
+    t_update = thread(&GAME::update,this);
 
     srand(time(NULL));
 
@@ -48,15 +52,17 @@ GAME::GAME()
 // ================================================================================= //
 // Destructor
 //
-// It waits for the other thread to end, and destroys the mutex.
+// It tells the thread to stop, and waits for it.
 //
-// It also performs the ending scene which "burns up" the screen.
+// Finally, it also performs the ending scene which "burns up" the screen.
 //
 // ================================================================================= //
 GAME::~GAME()
 {
-    pthread_join(update_thread, NULL);
-    pthread_mutex_destroy(&mtx);
+    mtx.lock();
+    f_stat = 0;
+    mtx.unlock();
+    t_update.join();
 
     int width = 100;
     int height = 50;
@@ -139,7 +145,8 @@ void GAME::kill_game()
 // ================================================================================= //
 int GAME::play_game(char c)
 {
-    pthread_mutex_lock(&mtx);
+    mtx.lock();
+
     if(c == '\x04')
     {
         f_stat = 0;
@@ -156,7 +163,8 @@ int GAME::play_game(char c)
         cout << flush;
         CHANGE_COLOR_DEF();
     }
-    pthread_mutex_unlock(&mtx);
+
+    mtx.unlock();
 
     return f_stat;
 }
@@ -171,11 +179,14 @@ void GAME::update()
 {
     while(isRunning())
     {
-        pthread_mutex_lock(&mtx);
+        mtx.lock();
+
         temp = (temp + 1 - 'a')%26+'a';
         MOVE_CURSOR(1,1);
         cout << temp;
-        pthread_mutex_unlock(&mtx);
+
+        mtx.unlock();
+
         usleep(1000);
     }
 }
@@ -183,26 +194,12 @@ void GAME::update()
 // ================================================================================= //
 // isRunning
 //
-// return f_stat to tell if the game is running or not
+// it tells if the game is running or not
+// f_stat == 1 indicates it is running. Otherwise, it stops for some reason.
 // 
 // ================================================================================= //
 int GAME::isRunning()
 {
-    return f_stat;
-}
-
-// ================================================================================= //
-// run
-//
-// This method is supposed to run on another thread.
-// It updates the game status periodically.
-// ================================================================================= //
-void *GAME::run(void* p_gm)
-{
-    GAME* gm = (GAME*)p_gm;
-
-    gm->update();
-
-    pthread_exit(NULL);
+    return (f_stat == 1)? 1: 0;
 }
 
