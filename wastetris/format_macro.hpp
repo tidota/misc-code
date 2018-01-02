@@ -57,6 +57,7 @@ using namespace std;
 #define CURSOR_ON()  do{ cout << ESC << "[?25h"; }while(0)
 // === cursor off === //
 #define CURSOR_OFF() do{ cout << ESC << "[?25l"; }while(0)
+
 // === move the cursor to the given position === //
 // note: the position is specified by 1-index (it starts with 1, not 0)
 #define MOVE_CURSOR(x,y) \
@@ -65,6 +66,9 @@ do{\
     ostringstream sx; sx << (x);\
     cout << ESC << "[" << sy.str() << ";" << sx.str() << "H";\
 }while(0)
+
+// === flush the output buffer === //
+#define FLUSH() do { cout << flush; }while(0)
 
 // === clear the screen === //
 #define CLEAR_SCREEN() \
