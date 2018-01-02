@@ -34,9 +34,9 @@ GAME* GAME::game = NULL;
 //
 // It cleans up the screen for setup.
 // It also initializes the parameters for the game.
-// Then, it prepares a thread to independently run the update function.
 // Then, it initalizes the random number generator.
-// Finally, it draws the background including boxes.
+// Then, it draws the background including boxes.
+// Finally, it prepares a thread to independently run the update function.
 //
 // ================================================================================= //
 GAME::GAME()
@@ -47,8 +47,8 @@ GAME::GAME()
     nrow = 12;
     ncol = 10;
 
-    bin_start_x = 4;
-    bin_start_y = 4;
+    bin_start_x = START_CELL_X;
+    bin_start_y = START_CELL_Y;
 
     next_start_x = bin_start_x + ncol * WCELL + 3;
     next_start_y = bin_start_y;
@@ -58,9 +58,12 @@ GAME::GAME()
 
     f_stat = 1;
     
-    t_update = thread(&GAME::update,this);
+    draw_background();
 
     srand(time(NULL));
+
+    t_update = thread(&GAME::update,this);
+
 
 }
 
@@ -187,6 +190,8 @@ void GAME::draw_background()
     CHANGE_COLOR_CYAN();
     DRAW_RECT(bin_start_x-1, bin_start_y-1, bin_start_x+WCELL*ncol, bin_start_y+HCELL*nrow);
     DRAW_RECT(next_start_x-1, next_start_y-1, next_start_x+1+WCELL*4+1, next_start_y+1+HCELL*4+1);
+    MOVE_CURSOR(next_start_x+WCELL*2-2, next_start_y+1+HCELL*4+1+1);
+    cout << "NEXT";
     FLUSH();
     CHANGE_COLOR_DEF();
 }
@@ -201,15 +206,18 @@ void GAME::update()
 {
     while(isRunning())
     {
-        draw_background();
         mtx.lock();
         mtx.unlock();
 
         CHANGE_COLOR_GREEN();
-        PUT_CELL(5,5);
-        PUT_CELL(5,6);
-        PUT_CELL(7,6);
-        FLUSH();
+        for(int i = 0; i < ncol; i++)
+        {
+            for(int j = 0; j < nrow; j++)
+            {
+                PUT_CELL(i,j);
+                FLUSH();
+            }
+        }
         CHANGE_COLOR_DEF();
 
         usleep(1000);
