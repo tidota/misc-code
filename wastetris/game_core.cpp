@@ -46,6 +46,8 @@ GAME::GAME()
 //
 // It waits for the other thread to end, and destroys the mutex.
 //
+// It also performs the ending scene which burning up the screen.
+//
 // ================================================================================= //
 GAME::~GAME()
 {
@@ -55,6 +57,7 @@ GAME::~GAME()
     int width = 100;
     int height = 50;
 
+    CHANGE_COLOR_BRED();
     for(int i = height; i >= 1; i--)
     {
         if(i - 4 >= 1)
@@ -84,6 +87,7 @@ GAME::~GAME()
         }
         usleep(40000);
     }
+    CHANGE_COLOR_DEF();
 
     CURSOR_ON();
     MOVE_CURSOR(1,1);
@@ -140,8 +144,6 @@ int GAME::play_game(char c)
     pthread_mutex_lock(&mtx);
     if(c == '\x04')
     {
-        CHANGE_COLOR_BLACK();
-        cout << "Ctrl-D received" << endl;
         f_stat = 0;
     }
     else
@@ -154,6 +156,7 @@ int GAME::play_game(char c)
         PUT_CELL(5,6);
         PUT_CELL(7,6);
         cout << flush;
+        CHANGE_COLOR_DEF();
     }
     pthread_mutex_unlock(&mtx);
 

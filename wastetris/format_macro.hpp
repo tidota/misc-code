@@ -17,10 +17,32 @@ using namespace std;
 #define START_LOC "[0;0H"
 
 // === colors === //
+// color: default
+#define CLR_DEF "[0m"
 // color: black
-#define BLACK "[0m"
+#define BLACK "[30m"
+#define BBLACK "[90m"
 // color: green
 #define GREEN "[32m"
+#define BGREEN "[92m"
+// color: red
+#define RED "[31m"
+#define BRED "[91m"
+// color: yellow
+#define YELLOW "[33m"
+#define BYELLOW "[93m"
+// color: blue
+#define BLUE "[34m"
+#define BBLUE "[94m"
+// color: bagenta
+#define MAGENTA "[35m"
+#define BMAGENTA "[95m"
+// color: cyan
+#define CYAN "[36m"
+#define BCYAN "[96m"
+// color: white
+#define WHITE "[37m"
+#define BWHITE "[97m"
 
 // === misc === //
 // indentation
@@ -52,11 +74,24 @@ do{\
 #define CLEAR_SCREEN() \
 do{ cout << ESC << START_LOC << ESC << CLEAR; }while(0)
 
-#define CHANGE_COLOR_BLACK() \
-do{ cout << ESC << BLACK; }while(0)
-
-#define CHANGE_COLOR_GREEN() \
-do{ cout << ESC << GREEN; }while(0)
+// === change the color of characters === //
+#define CHANGE_COLOR_DEF() do{ cout << ESC << CLR_DEF; }while(0)
+#define CHANGE_COLOR_BLACK() do{ cout << ESC << BLACK; }while(0)
+#define CHANGE_COLOR_BBLACK() do{ cout << ESC << BBLACK; }while(0)
+#define CHANGE_COLOR_WHITE() do{ cout << ESC << WHITE; }while(0)
+#define CHANGE_COLOR_BWHITE() do{ cout << ESC << BWHITE; }while(0)
+#define CHANGE_COLOR_RED() do{ cout << ESC << RED; }while(0)
+#define CHANGE_COLOR_BRED() do{ cout << ESC << BRED; }while(0)
+#define CHANGE_COLOR_GREEN() do{ cout << ESC << GREEN; }while(0)
+#define CHANGE_COLOR_BGREEN() do{ cout << ESC << BGREEN; }while(0)
+#define CHANGE_COLOR_BLUE() do{ cout << ESC << BLUE; }while(0)
+#define CHANGE_COLOR_BBLUE() do{ cout << ESC << BBLUE; }while(0)
+#define CHANGE_COLOR_YELLOW() do{ cout << ESC << YELLOW; }while(0)
+#define CHANGE_COLOR_BYELLOW() do{ cout << ESC << BYELLOW; }while(0)
+#define CHANGE_COLOR_MAGENTA() do{ cout << ESC << MAGENTA; }while(0)
+#define CHANGE_COLOR_BMAGENTA() do{ cout << ESC << BMAGENTA; }while(0)
+#define CHANGE_COLOR_CYAN() do{ cout << ESC << CYAN; }while(0)
+#define CHANGE_COLOR_BCYAN() do{ cout << ESC << BCYAN; }while(0)
 
 // === draw a horizontal line === //
 #define DRAW_HLINE_C(y,x1,x2,c) \
