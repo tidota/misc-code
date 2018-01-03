@@ -246,52 +246,56 @@ void GAME::abort()
 // ================================================================================= //
 void GAME::rand_next()
 {
+    int color = rand()%12;
+    if(color < 6) color++;
+    else color += 5;
+
     next_piece[0][0] = 0; next_piece[0][1] = 0; next_piece[0][2] = 0; next_piece[0][3] = 0;
-    next_piece[1][0] = 0; next_piece[1][1] = 1; next_piece[1][2] = 1; next_piece[1][3] = 0;
-    next_piece[2][0] = 0; next_piece[2][1] = 1; next_piece[2][2] = 1; next_piece[2][3] = 0;
+    next_piece[1][0] = 0; next_piece[1][1] = color; next_piece[1][2] = color; next_piece[1][3] = 0;
+    next_piece[2][0] = 0; next_piece[2][1] = color; next_piece[2][2] = color; next_piece[2][3] = 0;
     next_piece[3][0] = 0; next_piece[3][1] = 0; next_piece[3][2] = 0; next_piece[3][3] = 0;
 
     double p_val = (double)rand()/RAND_MAX;
     if(p_val < 3.0/7.0)
     {
         next_piece[1][1] = 0;
-        next_piece[0][2] = 1;
+        next_piece[0][2] = color;
         p_val = (double)rand()/RAND_MAX;
         if(p_val < 1.0/6.0)
         {
             next_piece[2][1] = 0;
-            next_piece[3][2] = 1;
+            next_piece[3][2] = color;
         }
         else if(p_val < 2.0/6.0)
         {
-            next_piece[1][1] = 1;
+            next_piece[1][1] = color;
             next_piece[2][1] = 0;
         }
         else if(p_val < 2.0/3.0)
         {
             next_piece[0][2] = 0;
-            next_piece[1][3] = 1;
+            next_piece[1][3] = color;
         }
     }
     else if(p_val < 6.0/7.0)
     {
         next_piece[2][1] = 0;
-        next_piece[3][2] = 1;
+        next_piece[3][2] = color;
         p_val = (double)rand()/RAND_MAX;
         if(p_val < 1.0/6.0)
         {
             next_piece[1][1] = 0;
-            next_piece[0][2] = 1;
+            next_piece[0][2] = color;
         }
         else if(p_val < 2.0/6.0)
         {
             next_piece[1][1] = 0;
-            next_piece[2][1] = 1;
+            next_piece[2][1] = color;
         }
         else if(p_val < 2.0/3.0)
         {
             next_piece[3][2] = 0;
-            next_piece[2][3] = 1;
+            next_piece[2][3] = color;
         }
     }
 
@@ -465,7 +469,7 @@ void GAME::draw_cells()
             }
             else
             {
-                canvas[j][i] = 2;
+                canvas[j][i] = bin[j][i];
             }
         }
     }
@@ -476,7 +480,7 @@ void GAME::draw_cells()
             if(cur_piece[j][i]>0)
             {
                 if(0<=cur_p_x+i&&cur_p_x+i<ncol&&0<=cur_p_y+j&&cur_p_y+j<nrow)
-                    canvas[cur_p_y+j][cur_p_x+i] = 13;
+                    canvas[cur_p_y+j][cur_p_x+i] = cur_piece[j][i];
             }
         }
     }
@@ -487,28 +491,11 @@ void GAME::draw_cells()
         {
             if(canvas[j][i] != shadow[j][i])
             {
-                if(canvas[j][i] == 0)
-                    DEL_CELL(i,j);
-                else if(canvas[j][i] == 2)
-                {
-                    CHANGE_COLOR_GREEN();
-                    PUT_CELL(i,j);
-                }
-                else if(canvas[j][i] == 13)
-                {
-                    CHANGE_COLOR_BYELLOW();
-                    PUT_CELL(i,j);
-                }
-                else
-                {
-                    CHANGE_COLOR_DEF();
-                    PUT_CELL(i,j);
-                }
+                PUT_CELL_COLOR(i,j,canvas[j][i]);
                 shadow[j][i] = canvas[j][i];
             }
         }
     }
-    CHANGE_COLOR_YELLOW();
     for(int i = 0; i < NCOL_PIECE; i++)
     {
         for(int j = 0; j < NROW_PIECE; j++)
@@ -519,6 +506,7 @@ void GAME::draw_cells()
             }
             else
             {
+                CHANGE_COLOR(next_piece[j][i]);
                 PUT_CELL_NBOX(i,j);
             }
         }
