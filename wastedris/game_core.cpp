@@ -372,6 +372,21 @@ int GAME::play_game(char c)
         if(isMovable(-1,0))
             cur_p_x--;
     }
+    else if(c == 'B') // down arrow
+    {
+        if(isMovable(0,1))
+            cur_p_y++;
+    }
+    else if(c == ' ' || c == 'x') // for clockwise rotation
+    {
+        if(isRotatable(true))
+            rotR_piece(cur_piece);
+    }
+    else if(c == 'z') // for anti-clockwise rotation
+    {
+        if(isRotatable(false))
+            rotL_piece(cur_piece);
+    }
     draw_cells();
 
     mtx.unlock();
@@ -526,6 +541,46 @@ bool GAME::isMovable(int dx, int dy)
     }
 
     return f_movable;
+}
+
+// ================================================================================= //
+// isRotatable
+//
+// It tells if the current piece can be rotated.
+// The argument indicates the rotation is clockwise or not.
+// ================================================================================= //
+bool GAME::isRotatable(bool clockwise)
+{
+    int buff[NROW_PIECE][NCOL_PIECE];
+    bool f_rotatable = true;
+    for(int i = 0; i < NROW_PIECE; i++)
+    {
+        for(int j = 0; j < NCOL_PIECE; j++)
+        {
+            if(clockwise)
+                buff[j][NCOL_PIECE-1-i] = cur_piece[i][j];
+            else
+                buff[NROW_PIECE-1-j][i] = cur_piece[i][j];
+        }
+    }
+
+    for(int i = 0; i < NROW_PIECE; i++)
+    {
+        for(int j = 0; j < NCOL_PIECE; j++)
+        {
+            int x = cur_p_x+j;
+            int y = cur_p_y+i;
+            if(buff[i][j]!=0)
+            {
+                if(0<=x && x<ncol && 0<=y && y<nrow && bin[y][x]!=0)
+                    f_rotatable = false;
+                if(x < 0 || ncol <= x || nrow <= y)
+                    f_rotatable = false;
+            }
+        }
+    }
+
+    return f_rotatable;
 }
 
 // ================================================================================= //

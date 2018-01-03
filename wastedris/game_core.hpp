@@ -58,6 +58,7 @@ private:
     void draw_cells();
     void update();
     bool isMovable(int dx, int dy);
+    bool isRotatable(bool clockwise);
     void placePiece();
 
 public:
