@@ -39,7 +39,7 @@ int main()
         f_continue = gm->play_game(c);
     }
 
-    gm->kill_game();
+    GAME::kill_game();
 
     return f_fail;
 }

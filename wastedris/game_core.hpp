@@ -48,6 +48,8 @@ private:
     GAME();
     ~GAME();
     void init_stat();
+    void abort();
+    void play_endmovie();
     void rand_next();
     void copy_pieces();
     void rotR_piece(int (*piece)[NCOL_PIECE]);

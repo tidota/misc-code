@@ -33,9 +33,10 @@ GAME* GAME::game = NULL;
 // Constructor
 //
 // It cleans up the screen for setup.
-// It also initializes the parameters for the game.
-// Then, it initalizes the random number generator.
-// Then, it draws the background including boxes.
+// It also initializes the graphical parameters for the game.
+// Then, it initializes the random number generator.
+// Then, it initializes the internal parameters.
+// Then, it draws the background including boxes and cells.
 // Finally, it prepares a thread to independently run the update function.
 //
 // ================================================================================= //
@@ -56,13 +57,15 @@ GAME::GAME()
     screen_width = next_start_x + 1 + 4 * WCELL + 1 + 3;
     screen_height = bin_start_y + nrow * HCELL + 3;
 
+    bin = new int*[nrow];
+    for(int i = 0; i < nrow; i++)
+    {
+        bin[i] = new int[ncol];
+    }
+
     srand(time(NULL));
-    bin = NULL;
 
     init_stat();
-    rand_next();
-    copy_pieces();
-    rand_next();
     
     draw_background();
     draw_cells();
@@ -74,16 +77,19 @@ GAME::GAME()
 // ================================================================================= //
 // Destructor
 //
-// It tells the thread to stop, and waits for it.
-//
-// Finally, it also performs the ending scene which "burns up" the screen.
-//
+// If the game is not over, the method tells it to stop, and plays the end movie.
+// Then, the main thread waits for the update thread to join.
+// Then, it releases the heap memory.
+// Finally, it displays a message.
 // ================================================================================= //
 GAME::~GAME()
 {
-    mtx.lock();
-    f_stat = 0;
-    mtx.unlock();
+    if(f_stat != 0)
+    {
+        mtx.lock();
+        f_stat = 0;
+        mtx.unlock();
+    }
     t_update.join();
     if(bin != NULL)
     {
@@ -92,6 +98,36 @@ GAME::~GAME()
         delete[] bin;
     }
 
+    CLEAR_SCREEN();
+    CURSOR_ON();
+    MOVE_CURSOR(1,1);
+    cout << endl << "           go back to work now" << endl << endl;
+}
+
+// ================================================================================= //
+// init_game
+//
+// This function initializes the state of the game, and restarts the thread.
+// 
+// ================================================================================= //
+GAME *GAME::init_game()
+{
+    if(game != NULL)
+    {
+        delete game;
+    }
+    game = new GAME();
+
+    return game;
+}
+
+// ================================================================================= //
+// end_movie
+//
+// This plays the end movie.
+// ================================================================================= //
+void GAME::play_endmovie()
+{
     int width = screen_width;
     int height = screen_height;
 
@@ -120,32 +156,12 @@ GAME::~GAME()
         usleep(60000);
     }
     CHANGE_COLOR_DEF();
-
-    CURSOR_ON();
-    MOVE_CURSOR(1,1);
-    cout << "go back to work now" << endl;
-}
-
-// ================================================================================= //
-// init_game
-//
-// This function initializes the state of the game, and restarts the thread.
-// 
-// ================================================================================= //
-GAME *GAME::init_game()
-{
-    if(game != NULL)
-    {
-        game->kill_game();
-    }
-    game = new GAME();
-
-    return game;
 }
 
 // ================================================================================= //
 // kill_game
 // This function stops the running game and kills the thread.
+// Finally, it plays the end movie.
 // 
 // ================================================================================= //
 void GAME::kill_game()
@@ -164,17 +180,8 @@ void GAME::kill_game()
 // ================================================================================= //
 void GAME::init_stat()
 {
-    if(bin != NULL)
-    {
-        for(int i = 0; i < nrow; i++)
-            delete[] bin[i];
-        delete[] bin;
-    }
-
-    bin = new int*[nrow];
     for(int i = 0; i < nrow; i++)
     {
-        bin[i] = new int[ncol];
         for(int j =0; j < ncol; j++)
         {
             bin[i][j] = 0;
@@ -190,6 +197,20 @@ void GAME::init_stat()
     }
 
     f_stat = 1;
+    rand_next();
+    copy_pieces();
+    rand_next();
+}
+
+// ================================================================================= //
+// abort()
+//
+// This aborts the game and plays the end movie.
+// ================================================================================= //
+void GAME::abort()
+{
+    f_stat = 0;
+    play_endmovie();
 }
 
 // ================================================================================= //
@@ -339,7 +360,7 @@ int GAME::play_game(char c)
 
     if(c == '\x04')
     {
-        f_stat = 0;
+        abort();
     }
     else
     {
@@ -375,7 +396,7 @@ void GAME::draw_background()
 // ================================================================================= //
 void GAME::draw_cells()
 {
-    CHANGE_COLOR_MAGENTA();
+    CHANGE_COLOR_GREEN();
     for(int i = 0; i < ncol; i++)
     {
         for(int j = 0; j < nrow; j++)
@@ -437,8 +458,8 @@ void GAME::update()
 {
     while(isRunning())
     {
-        mtx.lock();
         
+        mtx.lock();
         if(isMovable(0,1))
         {
             cur_p_y++; 
@@ -447,6 +468,11 @@ void GAME::update()
         else if(cur_p_y < 0)
         {
             f_stat = 0;
+            play_endmovie();
+            MOVE_CURSOR(1,1);
+            cout << endl << endl << endl;
+            cout << "          GAME OVER         " << endl << endl << endl;
+            cout << "press any button." << endl;
         }
         else
         {
