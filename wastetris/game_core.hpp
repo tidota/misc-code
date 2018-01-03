@@ -3,6 +3,7 @@
 
 #include <thread>
 #include <mutex>
+#include "format_macro.hpp"
 
 class GAME
 {
@@ -23,6 +24,14 @@ private:
     int next_start_x;
     int next_start_y;
 
+    // bin: 2D table holding stata of the cells
+    int **bin;
+    // cur_piece: current piece and its location
+    int cur_piece[NROW_PIECE][NCOL_PIECE];
+    int cur_p_x, cur_p_y;
+    // next_piece: the piece which will be released
+    int next_piece[NROW_PIECE][NCOL_PIECE];
+
     // the status of the game
     // 0: stopped
     // 1: running
@@ -38,7 +47,13 @@ private:
 
     GAME();
     ~GAME();
+    void init_stat();
+    void rand_next();
+    void copy_pieces();
+    void rotR_piece(int (*piece)[NCOL_PIECE]);
+    void rotL_piece(int (*piece)[NCOL_PIECE]);
     void draw_background();
+    void draw_cells();
     void update();
 
 public:

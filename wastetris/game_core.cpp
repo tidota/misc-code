@@ -44,27 +44,31 @@ GAME::GAME()
     CLEAR_SCREEN();
     CURSOR_OFF();
 
-    nrow = 12;
-    ncol = 10;
+    nrow = NROW_BIN;
+    ncol = NCOL_BIN;
 
     bin_start_x = START_CELL_X;
     bin_start_y = START_CELL_Y;
 
-    next_start_x = bin_start_x + ncol * WCELL + 3;
-    next_start_y = bin_start_y;
+    next_start_x = START_CELL_NBOX_X;
+    next_start_y = START_CELL_NBOX_Y;
 
     screen_width = next_start_x + 1 + 4 * WCELL + 1 + 3;
     screen_height = bin_start_y + nrow * HCELL + 3;
 
-    f_stat = 1;
-    
-    draw_background();
-
     srand(time(NULL));
+    bin = NULL;
+
+    init_stat();
+    rand_next();
+    copy_pieces();
+    
+
+    draw_background();
+    draw_cells();
+
 
     t_update = thread(&GAME::update,this);
-
-
 }
 
 // ================================================================================= //
@@ -81,6 +85,12 @@ GAME::~GAME()
     f_stat = 0;
     mtx.unlock();
     t_update.join();
+    if(bin != NULL)
+    {
+        for(int i = 0; i < nrow; i++)
+            delete[] bin[i];
+        delete[] bin;
+    }
 
     int width = screen_width;
     int height = screen_height;
@@ -148,6 +158,165 @@ void GAME::kill_game()
 }
 
 // ================================================================================= //
+// init_stat
+//
+// initializes all internal parameters.
+// ================================================================================= //
+void GAME::init_stat()
+{
+    if(bin != NULL)
+    {
+        for(int i = 0; i < nrow; i++)
+            delete[] bin[i];
+        delete[] bin;
+    }
+
+    bin = new int*[nrow];
+    for(int i = 0; i < nrow; i++)
+    {
+        bin[i] = new int[ncol];
+        for(int j =0; j < ncol; j++)
+        {
+            bin[i][j] = 0;
+        }
+    }
+    for(int i = 0; i < NROW_PIECE; i++)
+    {
+        for(int j = 0; j < NCOL_PIECE; j++)
+        {
+            cur_piece[i][j] = 0;
+            next_piece[i][j] = 0;
+        }
+    }
+
+    f_stat = 1;
+}
+
+// ================================================================================= //
+// rand_next()
+//
+// It generates a randomized piece in the next box.
+// It first generates a square shape. Then, it randomly changes the shape.
+// After all, each shape appears at a chance of 1/7.
+// Finally, it turns the generated piece randomly.
+//
+// *This method assumes the size of the piece is 4x4.
+// 
+// ================================================================================= //
+void GAME::rand_next()
+{
+    next_piece[0][0] = 0; next_piece[0][1] = 0; next_piece[0][2] = 0; next_piece[0][3] = 0;
+    next_piece[1][0] = 0; next_piece[1][1] = 1; next_piece[1][2] = 1; next_piece[1][3] = 0;
+    next_piece[2][0] = 0; next_piece[2][1] = 1; next_piece[2][2] = 1; next_piece[2][3] = 0;
+    next_piece[3][0] = 0; next_piece[3][1] = 0; next_piece[3][2] = 0; next_piece[3][3] = 0;
+
+    double p_val = (double)rand()/RAND_MAX;
+    if(p_val < 3.0/7.0)
+    {
+        next_piece[1][1] = 0;
+        next_piece[0][2] = 1;
+        p_val = (double)rand()/RAND_MAX;
+        if(p_val < 1.0/6.0)
+        {
+            next_piece[2][1] = 0;
+            next_piece[3][2] = 1;
+        }
+        else if(p_val < 2.0/6.0)
+        {
+            next_piece[1][1] = 1;
+            next_piece[2][1] = 0;
+        }
+        else if(p_val < 2.0/3.0)
+        {
+            next_piece[0][2] = 0;
+            next_piece[1][3] = 1;
+        }
+    }
+    else if(p_val < 6.0/7.0)
+    {
+        next_piece[2][1] = 0;
+        next_piece[3][2] = 1;
+        p_val = (double)rand()/RAND_MAX;
+        if(p_val < 1.0/6.0)
+        {
+            next_piece[1][1] = 0;
+            next_piece[0][2] = 1;
+        }
+        else if(p_val < 2.0/6.0)
+        {
+            next_piece[1][1] = 0;
+            next_piece[2][1] = 1;
+        }
+        else if(p_val < 2.0/3.0)
+        {
+            next_piece[3][2] = 0;
+            next_piece[2][3] = 1;
+        }
+    }
+
+    p_val = (double)rand()/RAND_MAX;
+    if(p_val < 1.0/4.0)
+        rotL_piece(next_piece);
+    else if(p_val < 2.0/4.0)
+        rotR_piece(next_piece);
+    else if(p_val < 3.0/4.0)
+    {
+        rotL_piece(next_piece);
+        rotL_piece(next_piece);
+    }
+}
+
+// ================================================================================= //
+// copy_pieces()
+//
+// It copies a piece in the next box to the current box.
+// ================================================================================= //
+void GAME::copy_pieces()
+{
+    for(int i = 0; i < NROW_PIECE; i++)
+    {
+        for(int j = 0; j < NCOL_PIECE; j++)
+        {
+            cur_piece[i][j] = next_piece[i][j];
+        }
+    }
+}
+
+// ================================================================================= //
+// rotR_piece
+//
+// This rotates a piece clockwise.
+// ================================================================================= //
+void GAME::rotR_piece(int (*piece)[NCOL_PIECE])
+{
+    int buff[NROW_PIECE][NCOL_PIECE];
+
+    for(int i = 0; i < NROW_PIECE; i++)
+        for(int j = 0; j < NCOL_PIECE; j++)
+            buff[j][NCOL_PIECE-1-i] = piece[i][j];
+    for(int i = 0; i < NROW_PIECE; i++)
+        for(int j = 0; j < NCOL_PIECE; j++)
+            piece[i][j] = buff[i][j];
+}
+
+// ================================================================================= //
+// rotL_piece
+//
+// This rotates a piece anti-clockwise.
+// ================================================================================= //
+void GAME::rotL_piece(int (*piece)[NCOL_PIECE])
+{
+    int buff[NROW_PIECE][NCOL_PIECE];
+
+    for(int i = 0; i < NROW_PIECE; i++)
+        for(int j = 0; j < NCOL_PIECE; j++)
+            buff[NROW_PIECE-1-j][i] = piece[i][j];
+    for(int i = 0; i < NROW_PIECE; i++)
+        for(int j = 0; j < NCOL_PIECE; j++)
+            piece[i][j] = buff[i][j];
+}
+
+// ================================================================================= //
 // play_game
 //
 // This function updates the state of the game based on the given character.
@@ -189,11 +358,51 @@ void GAME::draw_background()
     CLEAR_SCREEN();
     CHANGE_COLOR_CYAN();
     DRAW_RECT(bin_start_x-1, bin_start_y-1, bin_start_x+WCELL*ncol, bin_start_y+HCELL*nrow);
-    DRAW_RECT(next_start_x-1, next_start_y-1, next_start_x+1+WCELL*4+1, next_start_y+1+HCELL*4+1);
-    MOVE_CURSOR(next_start_x+WCELL*2-2, next_start_y+1+HCELL*4+1+1);
+    DRAW_RECT(next_start_x-1, next_start_y-1, next_start_x+WCELL*4, next_start_y+HCELL*4);
+    MOVE_CURSOR(next_start_x+WCELL*2-2, next_start_y+HCELL*4+1+1);
     cout << "NEXT";
     FLUSH();
     CHANGE_COLOR_DEF();
+}
+
+// ================================================================================= //
+// draw_cells
+//
+// It draws all cells in the bin and the next box.
+// ================================================================================= //
+void GAME::draw_cells()
+{
+    CHANGE_COLOR_MAGENTA();
+    for(int i = 0; i < ncol; i++)
+    {
+        for(int j = 0; j < nrow; j++)
+        {
+            if(bin[j][i]==0)
+            {
+                DEL_CELL(i,j);
+            }
+            else
+            {
+                PUT_CELL(i,j);
+            }
+        }
+    }
+    CHANGE_COLOR_YELLOW();
+    for(int i = 0; i < NCOL_PIECE; i++)
+    {
+        for(int j = 0; j < NROW_PIECE; j++)
+        {
+            if(next_piece[j][i]==0)
+            {
+                DEL_CELL_NBOX(i,j);
+            }
+            else
+            {
+                PUT_CELL_NBOX(i,j);
+            }
+        }
+    }
+    FLUSH();
 }
 
 // ================================================================================= //
@@ -208,17 +417,6 @@ void GAME::update()
     {
         mtx.lock();
         mtx.unlock();
-
-        CHANGE_COLOR_GREEN();
-        for(int i = 0; i < ncol; i++)
-        {
-            for(int j = 0; j < nrow; j++)
-            {
-                PUT_CELL(i,j);
-                FLUSH();
-            }
-        }
-        CHANGE_COLOR_DEF();
 
         usleep(1000);
     }

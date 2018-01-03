@@ -149,7 +149,12 @@ do{\
 #define WCELL 4
 // height of a cell
 #define HCELL 3
-// drawing lines based on cells
+// nrow of the bin
+#define NROW_BIN 12
+// ncol of a piece
+#define NCOL_BIN 10
+
+// drawing lines based on cells in the bin
 #define DRAW_HLINE_C_CELL(cy,cx1,cx2,c) \
     DRAW_HLINE_C(START_CELL_Y + HCELL*(cy), START_CELL_X + WCELL*(cx1), START_CELL_X + WCELL*(cx2+1)-1,c)
 #define DRAW_HLINE_CELL(cy,cx1,cx2) DRAW_HLINE_C_CELL(cy,cx1,cx2,'-')
@@ -168,6 +173,42 @@ do{\
    DRAW_RECT_C_CELL(cx,cy,cx,cy,ch,cv,cc);\
 }while(0)
 #define PUT_CELL(cx,cy) PUT_C_CELL(cx,cy,'-','|','+',"▮")
+#define DEL_CELL(cx,cy) PUT_C_CELL(cx,cy,' ',' ',' ',' ')
+
+// === about the next box ===
+// starting point in x
+#define START_CELL_NBOX_X (START_CELL_X + NROW_BIN * WCELL + 3)
+// starting point in y
+#define START_CELL_NBOX_Y START_CELL_Y
+// width of a cell
+#define WCELL_NBOX 4
+// height of a cell
+#define HCELL_NBOX 3
+// nrow of a piece
+#define NROW_PIECE 4
+// ncol of a piece
+#define NCOL_PIECE 4
+
+// drawing lines based on cells in the next box
+#define DRAW_HLINE_C_CELL_NBOX(cy,cx1,cx2,c) \
+    DRAW_HLINE_C(START_CELL_NBOX_Y + HCELL_NBOX*(cy), START_CELL_NBOX_X + WCELL_NBOX*(cx1), START_CELL_NBOX_X + WCELL_NBOX*(cx2+1)-1,c)
+#define DRAW_HLINE_CELL_NBOX(cy,cx1,cx2) DRAW_HLINE_C_CELL_NBOX(cy,cx1,cx2,'-')
+#define DRAW_VLINE_C_CELL_NBOX(cx,cy1,cy2,c) \
+    DRAW_VLINE_C(START_CELL_NBOX_X + WCELL_NBOX*(cx), START_CELL_NBOX_Y + HCELL_NBOX*(cy1), START_CELL_NBOX_Y + HCELL_NBOX*(cy2+1)-1,c)
+#define DRAW_VLINE_CELL_NBOX(cx,cy1,cy2) DRAW_VLINE_C_CELL_NBOX(cx,cy1,cy2,'|')
+#define DRAW_RECT_C_CELL_NBOX(cx1,cy1,cx2,cy2,ch,cv,cc)\
+   DRAW_RECT_C(START_CELL_NBOX_X+WCELL_NBOX*(cx1),START_CELL_NBOX_Y+HCELL_NBOX*(cy1),START_CELL_NBOX_X+WCELL_NBOX*(cx2+1)-1,START_CELL_NBOX_Y+HCELL_NBOX*(cy2+1)-1,ch,cv,cc)
+#define DRAW_RECT_CELL_NBOX(cx1,cy1,cx2,cy2) DRAW_RECT_C_CELL_NBOX(cx1,cy1,cx2,cy2,'-','|','+')
+#define FILL_RECT_C_CELL_NBOX(cx1,cy1,cx2,cy2,c)\
+   FILL_RECT_C(START_CELL_NBOX_X+WCELL_NBOX*(cx1),START_CELL_NBOX_Y+HCELL_NBOX*(cy1),START_CELL_NBOX_X+WCELL_NBOX*(cx2+1)-1,START_CELL_NBOX_Y+HCELL_NBOX*(cy2+1)-1,c)
+#define FILL_RECT_CELL_NBOX(cx1,cy1,cx2,cy2) FILL_RECT_C_CELL_NBOX(cx1,cy1,cx2,cy2,"▮")
+#define PUT_C_CELL_NBOX(cx,cy,ch,cv,cc,cf)\
+do{\
+   FILL_RECT_C_CELL_NBOX(cx,cy,cx,cy,cf);\
+   DRAW_RECT_C_CELL_NBOX(cx,cy,cx,cy,ch,cv,cc);\
+}while(0)
+#define PUT_CELL_NBOX(cx,cy) PUT_C_CELL_NBOX(cx,cy,'-','|','+',"▮")
+#define DEL_CELL_NBOX(cx,cy) PUT_C_CELL_NBOX(cx,cy,' ',' ',' ',' ')
 
 
 #endif //_FORMAT_MACRO_HPP
