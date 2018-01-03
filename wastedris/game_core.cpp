@@ -362,9 +362,17 @@ int GAME::play_game(char c)
     {
         abort();
     }
-    else
+    else if(c == 'C') // right arrow 
     {
+        if(isMovable(1,0))
+            cur_p_x++;
     }
+    else if(c == 'D') // left arrow
+    {
+        if(isMovable(-1,0))
+            cur_p_x--;
+    }
+    draw_cells();
 
     mtx.unlock();
 
