@@ -26,6 +26,10 @@ private:
 
     // bin: 2D table holding stata of the cells
     int **bin;
+    // canvas: a buffer holding color infor of the bin
+    int **canvas;
+    // shadow: a buffer holding color infor of the bin in the previous state
+    int **shadow;
     // cur_piece: current piece and its location
     int cur_piece[NROW_PIECE][NCOL_PIECE];
     int cur_p_x, cur_p_y;

@@ -58,9 +58,13 @@ GAME::GAME()
     screen_height = bin_start_y + nrow * HCELL + 3;
 
     bin = new int*[nrow];
+    canvas = new int*[nrow];
+    shadow = new int*[nrow];
     for(int i = 0; i < nrow; i++)
     {
         bin[i] = new int[ncol];
+        canvas[i] = new int[ncol];
+        shadow[i] = new int[ncol];
     }
 
     srand(time(NULL));
@@ -98,6 +102,18 @@ GAME::~GAME()
         for(int i = 0; i < nrow; i++)
             delete[] bin[i];
         delete[] bin;
+    }
+    if(canvas != NULL)
+    {
+        for(int i = 0; i < nrow; i++)
+            delete[] canvas[i];
+        delete[] canvas;
+    }
+    if(shadow != NULL)
+    {
+        for(int i = 0; i < nrow; i++)
+            delete[] shadow[i];
+        delete[] shadow;
     }
 
     CLEAR_SCREEN();
@@ -187,6 +203,8 @@ void GAME::init_stat()
         for(int j =0; j < ncol; j++)
         {
             bin[i][j] = 0;
+            canvas[i][j] = 0;
+            shadow[i][j] = 0;
         }
     }
     for(int i = 0; i < NROW_PIECE; i++)
@@ -418,25 +436,39 @@ void GAME::draw_background()
 // draw_cells
 //
 // It draws all cells in the bin and the next box.
+//
+// For the bin, it remembers which color is stored for each cell.
+// Only if a cell is to be changed in color, it draws the cell.
+//
+// To draw the bin, it first generates a table of color information for each cell.
+// Then, the table is compared with the old one.
+// Only if different, the cell is redrawn.
+//
+// color index:
+//   1: red       11: bright red
+//   2: green     12: bright green 
+//   3: yellow    13: bright yellow
+//   4: blue      14: bright blue
+//   5: magenta   15: bright magenta
+//   6: cyan      16: bright cyan
+//   7: white     17: bright white
 // ================================================================================= //
 void GAME::draw_cells()
 {
-    CHANGE_COLOR_GREEN();
     for(int i = 0; i < ncol; i++)
     {
         for(int j = 0; j < nrow; j++)
         {
             if(bin[j][i]==0)
             {
-                DEL_CELL(i,j);
+                canvas[j][i] = 0;
             }
             else
             {
-                PUT_CELL(i,j);
+                canvas[j][i] = 2;
             }
         }
     }
-    CHANGE_COLOR_BYELLOW();
     for(int i = 0; i < NCOL_PIECE; i++)
     {
         for(int j = 0; j < NROW_PIECE; j++)
@@ -444,7 +476,35 @@ void GAME::draw_cells()
             if(cur_piece[j][i]>0)
             {
                 if(0<=cur_p_x+i&&cur_p_x+i<ncol&&0<=cur_p_y+j&&cur_p_y+j<nrow)
-                    PUT_CELL(cur_p_x+i,cur_p_y+j);
+                    canvas[cur_p_y+j][cur_p_x+i] = 13;
+            }
+        }
+    }
+    CHANGE_COLOR_GREEN();
+    for(int i = 0; i < ncol; i++)
+    {
+        for(int j = 0; j < nrow; j++)
+        {
+            if(canvas[j][i] != shadow[j][i])
+            {
+                if(canvas[j][i] == 0)
+                    DEL_CELL(i,j);
+                else if(canvas[j][i] == 2)
+                {
+                    CHANGE_COLOR_GREEN();
+                    PUT_CELL(i,j);
+                }
+                else if(canvas[j][i] == 13)
+                {
+                    CHANGE_COLOR_BYELLOW();
+                    PUT_CELL(i,j);
+                }
+                else
+                {
+                    CHANGE_COLOR_DEF();
+                    PUT_CELL(i,j);
+                }
+                shadow[j][i] = canvas[j][i];
             }
         }
     }
