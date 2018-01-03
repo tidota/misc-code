@@ -437,11 +437,71 @@ void GAME::update()
     {
         mtx.lock();
         
-        cur_p_y++; 
-        draw_cells();
+        if(isMovable(0,1))
+        {
+            cur_p_y++; 
+            draw_cells();
+        }
+        else
+        {
+            placePiece();
+            copy_pieces();
+            rand_next();
+        }    
         mtx.unlock();
 
         usleep(500000);
+    }
+}
+
+// ================================================================================= //
+// isMovable
+//
+// it returns true if the current piece can move by the specified values.
+// otherwise, it returns false.
+//
+// the piece cannot move into the existing cells, the walls, and the floor.
+// the method does not care about the ceiling.
+// ================================================================================= //
+bool GAME::isMovable(int dx, int dy)
+{
+    int proposed_x = cur_p_x + dx;
+    int proposed_y = cur_p_y + dy;
+    bool f_movable = true;
+
+    for(int i = 0; i < NROW_PIECE; i++)
+    {
+        for(int j = 0; j < NCOL_PIECE; j++)
+        {
+            int x = proposed_x+j;
+            int y = proposed_y+i;
+            if(cur_piece[i][j]!=0)
+            {
+                if(0<=x && x<ncol && 0<=y && y<nrow && bin[y][x]!=0)
+                    f_movable = false;
+                if(x < 0 || ncol <= x || nrow <= y)
+                    f_movable = false;
+            }
+        }
+    }
+
+    return f_movable;
+}
+
+// ================================================================================= //
+// placePiece
+//
+// It places the current piece into the bin.
+// ================================================================================= //
+void GAME::placePiece()
+{
+    for(int i = 0; i < NROW_PIECE; i++)
+    {
+        for(int j = 0; j < NCOL_PIECE; j++)
+        {
+            if(cur_piece[i][j] != 0)
+                bin[cur_p_y+i][cur_p_x+j] = cur_piece[i][j];
+        }
     }
 }
 

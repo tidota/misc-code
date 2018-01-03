@@ -55,6 +55,8 @@ private:
     void draw_background();
     void draw_cells();
     void update();
+    bool isMovable(int dx, int dy);
+    void placePiece();
 
 public:
     static GAME* init_game();
