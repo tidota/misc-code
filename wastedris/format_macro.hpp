@@ -210,5 +210,57 @@ do{\
 #define PUT_CELL_NBOX(cx,cy) PUT_C_CELL_NBOX(cx,cy,'-','|','+',"▮")
 #define DEL_CELL_NBOX(cx,cy) PUT_C_CELL_NBOX(cx,cy,' ',' ',' ',' ')
 
+// color index:
+//   0: none
+//   1: red       11: bright red
+//   2: green     12: bright green 
+//   3: yellow    13: bright yellow
+//   4: blue      14: bright blue
+//   5: magenta   15: bright magenta
+//   6: cyan      16: bright cyan
+//   7: white     17: bright white
+#define CHANGE_COLOR(clr)\
+do{\
+    if(clr == 1)\
+        CHANGE_COLOR_RED();\
+    else if(clr == 2)\
+        CHANGE_COLOR_GREEN();\
+    else if(clr == 3)\
+        CHANGE_COLOR_YELLOW();\
+    else if(clr == 4)\
+        CHANGE_COLOR_BLUE();\
+    else if(clr == 5)\
+        CHANGE_COLOR_MAGENTA();\
+    else if(clr == 6)\
+        CHANGE_COLOR_CYAN();\
+    else if(clr == 7)\
+        CHANGE_COLOR_WHITE();\
+    else if(clr == 11)\
+        CHANGE_COLOR_BRED();\
+    else if(clr == 12)\
+        CHANGE_COLOR_BGREEN();\
+    else if(clr == 13)\
+        CHANGE_COLOR_BYELLOW();\
+    else if(clr == 14)\
+        CHANGE_COLOR_BBLUE();\
+    else if(clr == 15)\
+        CHANGE_COLOR_BMAGENTA();\
+    else if(clr == 16)\
+        CHANGE_COLOR_BCYAN();\
+    else if(clr == 17)\
+        CHANGE_COLOR_BWHITE();\
+    else\
+        CHANGE_COLOR_DEF();\
+}while(0)
+
+// put a cell with specifying a color
+#define PUT_CELL_COLOR(cx,cy,clr)\
+do{\
+    CHANGE_COLOR(clr);\
+    if(clr > 0)\
+        PUT_CELL(cx,cy);\
+    else\
+        DEL_CELL(cx,cy);\
+}while(0)
 
 #endif //_FORMAT_MACRO_HPP

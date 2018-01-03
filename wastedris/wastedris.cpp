@@ -6,6 +6,7 @@
 // 
 
 #include <iostream>
+#include <unistd.h>
 #include "noncanonical.hpp"
 #include "game_core.hpp"
 
@@ -29,14 +30,14 @@ using namespace std;
 int main()
 {
     int f_fail = set_input_mode();
-    int f_continue = (f_fail == 0)? 1: 0;
 
     GAME* gm = GAME::init_game();
 
-    while(f_continue)
+    while(gm->isRunning())
     {
         char c = readOneChar();
-        f_continue = gm->play_game(c);
+        gm->play_game(c);
+        usleep(1000);
     }
 
     GAME::kill_game();

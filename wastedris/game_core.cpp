@@ -58,9 +58,13 @@ GAME::GAME()
     screen_height = bin_start_y + nrow * HCELL + 3;
 
     bin = new int*[nrow];
+    canvas = new int*[nrow];
+    shadow = new int*[nrow];
     for(int i = 0; i < nrow; i++)
     {
         bin[i] = new int[ncol];
+        canvas[i] = new int[ncol];
+        shadow[i] = new int[ncol];
     }
 
     srand(time(NULL));
@@ -71,6 +75,8 @@ GAME::GAME()
     draw_cells();
     FLUSH();
 
+    n_step = 100;
+    i_step = 0;
     t_update = thread(&GAME::update,this);
 }
 
@@ -96,6 +102,18 @@ GAME::~GAME()
         for(int i = 0; i < nrow; i++)
             delete[] bin[i];
         delete[] bin;
+    }
+    if(canvas != NULL)
+    {
+        for(int i = 0; i < nrow; i++)
+            delete[] canvas[i];
+        delete[] canvas;
+    }
+    if(shadow != NULL)
+    {
+        for(int i = 0; i < nrow; i++)
+            delete[] shadow[i];
+        delete[] shadow;
     }
 
     CLEAR_SCREEN();
@@ -185,6 +203,8 @@ void GAME::init_stat()
         for(int j =0; j < ncol; j++)
         {
             bin[i][j] = 0;
+            canvas[i][j] = 0;
+            shadow[i][j] = 0;
         }
     }
     for(int i = 0; i < NROW_PIECE; i++)
@@ -226,52 +246,56 @@ void GAME::abort()
 // ================================================================================= //
 void GAME::rand_next()
 {
+    int color = rand()%12;
+    if(color < 6) color++;
+    else color += 5;
+
     next_piece[0][0] = 0; next_piece[0][1] = 0; next_piece[0][2] = 0; next_piece[0][3] = 0;
-    next_piece[1][0] = 0; next_piece[1][1] = 1; next_piece[1][2] = 1; next_piece[1][3] = 0;
-    next_piece[2][0] = 0; next_piece[2][1] = 1; next_piece[2][2] = 1; next_piece[2][3] = 0;
+    next_piece[1][0] = 0; next_piece[1][1] = color; next_piece[1][2] = color; next_piece[1][3] = 0;
+    next_piece[2][0] = 0; next_piece[2][1] = color; next_piece[2][2] = color; next_piece[2][3] = 0;
     next_piece[3][0] = 0; next_piece[3][1] = 0; next_piece[3][2] = 0; next_piece[3][3] = 0;
 
     double p_val = (double)rand()/RAND_MAX;
     if(p_val < 3.0/7.0)
     {
         next_piece[1][1] = 0;
-        next_piece[0][2] = 1;
+        next_piece[0][2] = color;
         p_val = (double)rand()/RAND_MAX;
         if(p_val < 1.0/6.0)
         {
             next_piece[2][1] = 0;
-            next_piece[3][2] = 1;
+            next_piece[3][2] = color;
         }
         else if(p_val < 2.0/6.0)
         {
-            next_piece[1][1] = 1;
+            next_piece[1][1] = color;
             next_piece[2][1] = 0;
         }
         else if(p_val < 2.0/3.0)
         {
             next_piece[0][2] = 0;
-            next_piece[1][3] = 1;
+            next_piece[1][3] = color;
         }
     }
     else if(p_val < 6.0/7.0)
     {
         next_piece[2][1] = 0;
-        next_piece[3][2] = 1;
+        next_piece[3][2] = color;
         p_val = (double)rand()/RAND_MAX;
         if(p_val < 1.0/6.0)
         {
             next_piece[1][1] = 0;
-            next_piece[0][2] = 1;
+            next_piece[0][2] = color;
         }
         else if(p_val < 2.0/6.0)
         {
             next_piece[1][1] = 0;
-            next_piece[2][1] = 1;
+            next_piece[2][1] = color;
         }
         else if(p_val < 2.0/3.0)
         {
             next_piece[3][2] = 0;
-            next_piece[2][3] = 1;
+            next_piece[2][3] = color;
         }
     }
 
@@ -416,25 +440,39 @@ void GAME::draw_background()
 // draw_cells
 //
 // It draws all cells in the bin and the next box.
+//
+// For the bin, it remembers which color is stored for each cell.
+// Only if a cell is to be changed in color, it draws the cell.
+//
+// To draw the bin, it first generates a table of color information for each cell.
+// Then, the table is compared with the old one.
+// Only if different, the cell is redrawn.
+//
+// color index:
+//   1: red       11: bright red
+//   2: green     12: bright green 
+//   3: yellow    13: bright yellow
+//   4: blue      14: bright blue
+//   5: magenta   15: bright magenta
+//   6: cyan      16: bright cyan
+//   7: white     17: bright white
 // ================================================================================= //
 void GAME::draw_cells()
 {
-    CHANGE_COLOR_GREEN();
     for(int i = 0; i < ncol; i++)
     {
         for(int j = 0; j < nrow; j++)
         {
             if(bin[j][i]==0)
             {
-                DEL_CELL(i,j);
+                canvas[j][i] = 0;
             }
             else
             {
-                PUT_CELL(i,j);
+                canvas[j][i] = bin[j][i];
             }
         }
     }
-    CHANGE_COLOR_BYELLOW();
     for(int i = 0; i < NCOL_PIECE; i++)
     {
         for(int j = 0; j < NROW_PIECE; j++)
@@ -442,11 +480,22 @@ void GAME::draw_cells()
             if(cur_piece[j][i]>0)
             {
                 if(0<=cur_p_x+i&&cur_p_x+i<ncol&&0<=cur_p_y+j&&cur_p_y+j<nrow)
-                    PUT_CELL(cur_p_x+i,cur_p_y+j);
+                    canvas[cur_p_y+j][cur_p_x+i] = cur_piece[j][i];
             }
         }
     }
-    CHANGE_COLOR_YELLOW();
+    CHANGE_COLOR_GREEN();
+    for(int i = 0; i < ncol; i++)
+    {
+        for(int j = 0; j < nrow; j++)
+        {
+            if(canvas[j][i] != shadow[j][i])
+            {
+                PUT_CELL_COLOR(i,j,canvas[j][i]);
+                shadow[j][i] = canvas[j][i];
+            }
+        }
+    }
     for(int i = 0; i < NCOL_PIECE; i++)
     {
         for(int j = 0; j < NROW_PIECE; j++)
@@ -457,6 +506,7 @@ void GAME::draw_cells()
             }
             else
             {
+                CHANGE_COLOR(next_piece[j][i]);
                 PUT_CELL_NBOX(i,j);
             }
         }
@@ -483,31 +533,48 @@ void GAME::update()
     {
         
         mtx.lock();
-        if(isMovable(0,1))
+        if(i_step == 0)
         {
-            cur_p_y++; 
-            draw_cells();
+            if(isMovable(0,1))
+            {
+                cur_p_y++; 
+                draw_cells();
+            }
+            else if(cur_p_y < 0)
+            {
+                f_stat = 0;
+                CHANGE_COLOR_BRED();
+                MOVE_CURSOR(screen_width/2-6,screen_height/2-2);
+                cout << "#############";
+                MOVE_CURSOR(screen_width/2-6,screen_height/2-1);
+                cout << "#           #";
+                MOVE_CURSOR(screen_width/2-6,screen_height/2);
+                cout << "# GAME OVER #";
+                MOVE_CURSOR(screen_width/2-6,screen_height/2+1);
+                cout << "#           #";
+                MOVE_CURSOR(screen_width/2-6,screen_height/2+2);
+                cout << "#############";
+                MOVE_CURSOR(screen_width/2-4,screen_height/2);
+                CHANGE_COLOR_DEF();
+                play_endmovie();
+                MOVE_CURSOR(1,1);
+                cout << "press any button." << endl;
+            }
+            else
+            {
+                placePiece();
+                copy_pieces();
+                rand_next();
+                eval_and_clean();
+            }
         }
-        else if(cur_p_y < 0)
-        {
-            f_stat = 0;
-            play_endmovie();
-            MOVE_CURSOR(1,1);
-            cout << endl << endl << endl;
-            cout << "          GAME OVER         " << endl << endl << endl;
-            cout << "press any button." << endl;
-        }
-        else
-        {
-            placePiece();
-            copy_pieces();
-            rand_next();
-            eval_and_clean();
-        }    
+        FLUSH();
+        i_step = (i_step + 1) % n_step;
         mtx.unlock();
 
-        usleep(500000);
+        usleep(5000);
     }
+    FLUSH();
 }
 
 // ================================================================================= //
