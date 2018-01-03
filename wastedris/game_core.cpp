@@ -71,6 +71,8 @@ GAME::GAME()
     draw_cells();
     FLUSH();
 
+    n_step = 100;
+    i_step = 0;
     t_update = thread(&GAME::update,this);
 }
 
@@ -483,31 +485,48 @@ void GAME::update()
     {
         
         mtx.lock();
-        if(isMovable(0,1))
+        if(i_step == 0)
         {
-            cur_p_y++; 
-            draw_cells();
+            if(isMovable(0,1))
+            {
+                cur_p_y++; 
+                draw_cells();
+            }
+            else if(cur_p_y < 0)
+            {
+                f_stat = 0;
+                CHANGE_COLOR_BRED();
+                MOVE_CURSOR(screen_width/2-6,screen_height/2-2);
+                cout << "#############";
+                MOVE_CURSOR(screen_width/2-6,screen_height/2-1);
+                cout << "#           #";
+                MOVE_CURSOR(screen_width/2-6,screen_height/2);
+                cout << "# GAME OVER #";
+                MOVE_CURSOR(screen_width/2-6,screen_height/2+1);
+                cout << "#           #";
+                MOVE_CURSOR(screen_width/2-6,screen_height/2+2);
+                cout << "#############";
+                MOVE_CURSOR(screen_width/2-4,screen_height/2);
+                CHANGE_COLOR_DEF();
+                play_endmovie();
+                MOVE_CURSOR(1,1);
+                cout << "press any button." << endl;
+            }
+            else
+            {
+                placePiece();
+                copy_pieces();
+                rand_next();
+                eval_and_clean();
+            }
         }
-        else if(cur_p_y < 0)
-        {
-            f_stat = 0;
-            play_endmovie();
-            MOVE_CURSOR(1,1);
-            cout << endl << endl << endl;
-            cout << "          GAME OVER         " << endl << endl << endl;
-            cout << "press any button." << endl;
-        }
-        else
-        {
-            placePiece();
-            copy_pieces();
-            rand_next();
-            eval_and_clean();
-        }    
+        FLUSH();
+        i_step = (i_step + 1) % n_step;
         mtx.unlock();
 
-        usleep(500000);
+        usleep(5000);
     }
+    FLUSH();
 }
 
 // ================================================================================= //

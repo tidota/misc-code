@@ -41,6 +41,10 @@ private:
     // thread and mutex
     std::thread t_update;
     std::mutex mtx;
+    // step index
+    // 0: update the game
+    int n_step;
+    int i_step;
 
     // pointer to the object (since this class is supposed to be singleton)
     static GAME* game;
