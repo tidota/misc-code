@@ -428,6 +428,8 @@ void GAME::draw_cells()
 //
 // It checks if the current piece can fall by one cell.
 // If so, just let it go.
+// Otherwise, it checks if the current piece is off the area of the bin.
+// If so, the game is over.
 // Otherwise, it places the current piece in the bin, and evaluates the game.
 // 
 // ================================================================================= //
@@ -441,6 +443,10 @@ void GAME::update()
         {
             cur_p_y++; 
             draw_cells();
+        }
+        else if(cur_p_y < 0)
+        {
+            f_stat = 0;
         }
         else
         {
