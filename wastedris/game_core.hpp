@@ -57,6 +57,7 @@ private:
     void draw_background();
     void draw_cells();
     void update();
+    void eval_and_clean();
     bool isMovable(int dx, int dy);
     bool isRotatable(bool clockwise);
     void placePiece();

@@ -502,10 +502,39 @@ void GAME::update()
             placePiece();
             copy_pieces();
             rand_next();
+            eval_and_clean();
         }    
         mtx.unlock();
 
         usleep(500000);
+    }
+}
+
+// ================================================================================= //
+// eval_and_clean
+//
+// it checks if there are full rows and remove them.
+// ================================================================================= //
+void GAME::eval_and_clean()
+{
+    for(int irow_search = nrow-1; irow_search >= 0;)
+    {
+        bool f_full = true;
+        for(int icol = 0; icol < ncol; icol++)
+            if(bin[irow_search][icol]==0)
+                f_full = false;
+        if(f_full)
+        {
+            for(int irow_clean = irow_search; irow_clean > 0; irow_clean--)
+            {
+                for(int icol = 0; icol < ncol; icol++)
+                    bin[irow_clean][icol] = bin[irow_clean-1][icol];
+            }
+        }
+        else
+        {
+            irow_search --;
+        }
     }
 }
 
