@@ -62,11 +62,11 @@ GAME::GAME()
     init_stat();
     rand_next();
     copy_pieces();
+    rand_next();
     
-
     draw_background();
     draw_cells();
-
+    FLUSH();
 
     t_update = thread(&GAME::update,this);
 }
@@ -270,6 +270,7 @@ void GAME::rand_next()
 // copy_pieces()
 //
 // It copies a piece in the next box to the current box.
+// Then, it initializes the curr piece's location.
 // ================================================================================= //
 void GAME::copy_pieces()
 {
@@ -280,6 +281,8 @@ void GAME::copy_pieces()
             cur_piece[i][j] = next_piece[i][j];
         }
     }
+    cur_p_x = (ncol - NCOL_PIECE)/2;
+    cur_p_y = -1*NROW_PIECE;
 }
 
 // ================================================================================= //
@@ -361,8 +364,8 @@ void GAME::draw_background()
     DRAW_RECT(next_start_x-1, next_start_y-1, next_start_x+WCELL*4, next_start_y+HCELL*4);
     MOVE_CURSOR(next_start_x+WCELL*2-2, next_start_y+HCELL*4+1+1);
     cout << "NEXT";
-    FLUSH();
     CHANGE_COLOR_DEF();
+    FLUSH();
 }
 
 // ================================================================================= //
@@ -387,6 +390,18 @@ void GAME::draw_cells()
             }
         }
     }
+    CHANGE_COLOR_BYELLOW();
+    for(int i = 0; i < NCOL_PIECE; i++)
+    {
+        for(int j = 0; j < NROW_PIECE; j++)
+        {
+            if(cur_piece[j][i]>0)
+            {
+                if(0<=cur_p_x+i&&cur_p_x+i<ncol&&0<=cur_p_y+j&&cur_p_y+j<nrow)
+                    PUT_CELL(cur_p_x+i,cur_p_y+j);
+            }
+        }
+    }
     CHANGE_COLOR_YELLOW();
     for(int i = 0; i < NCOL_PIECE; i++)
     {
@@ -402,6 +417,7 @@ void GAME::draw_cells()
             }
         }
     }
+    CHANGE_COLOR_DEF();
     FLUSH();
 }
 
@@ -409,6 +425,10 @@ void GAME::draw_cells()
 // update
 //
 // This method takes one step to update the game status controlling mutex.
+//
+// It checks if the current piece can fall by one cell.
+// If so, just let it go.
+// Otherwise, it places the current piece in the bin, and evaluates the game.
 // 
 // ================================================================================= //
 void GAME::update()
@@ -416,9 +436,12 @@ void GAME::update()
     while(isRunning())
     {
         mtx.lock();
+        
+        cur_p_y++; 
+        draw_cells();
         mtx.unlock();
 
-        usleep(1000);
+        usleep(500000);
     }
 }
 
