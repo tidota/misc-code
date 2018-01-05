@@ -150,9 +150,9 @@ do{\
 // height of a cell
 #define HCELL 3
 // nrow of the bin
-#define NROW_BIN 12
+#define NROW_BIN 13
 // ncol of a piece
-#define NCOL_BIN 10
+#define NCOL_BIN 11
 
 // drawing lines based on cells in the bin
 #define DRAW_HLINE_C_CELL(cy,cx1,cx2,c) \
@@ -177,7 +177,7 @@ do{\
 
 // === about the next box ===
 // starting point in x
-#define START_CELL_NBOX_X (START_CELL_X + NROW_BIN * WCELL + 3)
+#define START_CELL_NBOX_X (START_CELL_X + NCOL_BIN * WCELL + 1 + 1)
 // starting point in y
 #define START_CELL_NBOX_Y START_CELL_Y
 // width of a cell

@@ -20,9 +20,17 @@ private:
     int nrow;
     int ncol;
 
-    // the top-left corner of the next box
+    // the top-left corner of the next box and the size
     int next_start_x;
     int next_start_y;
+    int next_width;
+    int next_height;
+
+    // the top-left corner of the message box and the size
+    int mess_start_x;
+    int mess_start_y;
+    int mess_width;
+    int mess_height;
 
     // bin: 2D table holding stata of the cells
     int **bin;
@@ -41,6 +49,9 @@ private:
     // 1: running
     // others: some error or anything else
     int f_stat;
+
+    // counts of clearing full rows
+    int count_clearing_rows;
 
     // thread and mutex
     std::thread t_update;
@@ -64,6 +75,8 @@ private:
     void rotL_piece(int (*piece)[NCOL_PIECE]);
     void draw_background();
     void draw_cells();
+    void put_message();
+    void clear_message();
     void update();
     void eval_and_clean();
     bool isMovable(int dx, int dy);
