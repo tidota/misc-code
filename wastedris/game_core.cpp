@@ -53,9 +53,16 @@ GAME::GAME()
 
     next_start_x = START_CELL_NBOX_X;
     next_start_y = START_CELL_NBOX_Y;
+    next_width = 4*WCELL;
+    next_height = 4*HCELL;
 
-    screen_width = next_start_x + 1 + 4 * WCELL + 1 + 3;
+    screen_width = next_start_x + next_width + 1;
     screen_height = bin_start_y + nrow * HCELL + 3;
+
+    mess_start_x = START_CELL_NBOX_X;
+    mess_start_y = START_CELL_NBOX_Y + next_height + 1 + 1;
+    mess_width = next_width;
+    mess_height = bin_start_y + nrow*HCELL;
 
     bin = new int*[nrow];
     canvas = new int*[nrow];
@@ -195,6 +202,7 @@ void GAME::kill_game()
 // init_stat
 //
 // initializes all internal parameters.
+// also it clears the message box.
 // ================================================================================= //
 void GAME::init_stat()
 {
@@ -216,10 +224,13 @@ void GAME::init_stat()
         }
     }
 
+    count_clearing_rows = 0;
     f_stat = 1;
     rand_next();
     copy_pieces();
     rand_next();
+
+    clear_message();
 }
 
 // ================================================================================= //
@@ -429,9 +440,10 @@ void GAME::draw_background()
     CLEAR_SCREEN();
     CHANGE_COLOR_CYAN();
     DRAW_RECT(bin_start_x-1, bin_start_y-1, bin_start_x+WCELL*ncol, bin_start_y+HCELL*nrow);
-    DRAW_RECT(next_start_x-1, next_start_y-1, next_start_x+WCELL*4, next_start_y+HCELL*4);
-    MOVE_CURSOR(next_start_x+WCELL*2-2, next_start_y+HCELL*4+1+1);
+    DRAW_RECT(next_start_x-1, next_start_y-1, next_start_x+next_width, next_start_y+next_height);
+    MOVE_CURSOR(next_start_x+WCELL*2-2, next_start_y-1);
     cout << "NEXT";
+    DRAW_RECT(mess_start_x-1, mess_start_y-1, mess_start_x+mess_width, mess_start_y+mess_height);
     CHANGE_COLOR_DEF();
     FLUSH();
 }
@@ -516,6 +528,56 @@ void GAME::draw_cells()
 }
 
 // ================================================================================= //
+// put_message()
+//
+// put a message in the message box
+// ================================================================================= //
+void GAME::put_message()
+{
+    CHANGE_COLOR_MAGENTA();
+    if(count_clearing_rows == 1)
+    {
+        MOVE_CURSOR(mess_start_x+1,mess_start_y+1);
+        cout << "YOU WASTED";
+        MOVE_CURSOR(mess_start_x+1,mess_start_y+2);
+        cout << "YOUR TIME";
+    }
+    else if(count_clearing_rows == 2)
+    {
+        MOVE_CURSOR(mess_start_x+1,mess_start_y+3);
+        cout << "AGAIN";
+    }
+    else if(count_clearing_rows > 2)
+    {
+        MOVE_CURSOR(mess_start_x+1,mess_start_y+3);
+        cout << count_clearing_rows << " TIMES";
+    }
+    if(count_clearing_rows > 10)
+    {
+        MOVE_CURSOR(mess_start_x+1,mess_start_y+5);
+        cout << "It's time";
+        MOVE_CURSOR(mess_start_x+1,mess_start_y+6);
+        cout << "to regret";
+    }
+    CHANGE_COLOR_DEF();
+    FLUSH();
+}
+
+// ================================================================================= //
+// clear_message
+//
+// It clears everything in the message box
+// ================================================================================= //
+void GAME::clear_message()
+{
+    for(int y = mess_start_y; y < mess_start_y + mess_height; y++)
+    {
+        MOVE_CURSOR(mess_start_x,y);
+        cout << string(mess_width,' ');
+    }
+}
+
+// ================================================================================= //
 // update
 //
 // This method takes one step to update the game status controlling mutex.
@@ -567,6 +629,7 @@ void GAME::update()
                 rand_next();
                 eval_and_clean();
             }
+            put_message();
         }
         FLUSH();
         i_step = (i_step + 1) % n_step;
@@ -584,6 +647,7 @@ void GAME::update()
 // ================================================================================= //
 void GAME::eval_and_clean()
 {
+    bool f_cleared_at_least_one = false;
     for(int irow_search = nrow-1; irow_search >= 0;)
     {
         bool f_full = true;
@@ -597,12 +661,15 @@ void GAME::eval_and_clean()
                 for(int icol = 0; icol < ncol; icol++)
                     bin[irow_clean][icol] = bin[irow_clean-1][icol];
             }
+            f_cleared_at_least_one = true;
         }
         else
         {
             irow_search --;
         }
     }
+    if(f_cleared_at_least_one)
+        count_clearing_rows++;
 }
 
 // ================================================================================= //
