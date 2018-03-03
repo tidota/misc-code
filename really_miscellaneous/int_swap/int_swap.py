@@ -1,7 +1,8 @@
 # 180302
 #
-# the original code is from Irene's math professor
-# it originally allows duplicate copies of element to swap
+# given with two unsorted lists of integers
+#
+# swap integers between the lists so that the sum of the list is equal to that of the other.
 # 
 from itertools import product as product
 from itertools import combinations as comb
