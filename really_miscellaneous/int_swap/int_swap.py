@@ -23,7 +23,14 @@ def fix(A_, B_):
         d = max(sa, sb) - avg
         done = False
         for i in range(min(len(A), len(B))):
-            candidates = [x for x in product(comb(A,i), comb(B,i)) if sum(x[1]) - sum(x[0]) == d]
+            candidates = []
+            table = {}
+            for b in comb(B,i):
+                table[sum(b) - d] = b 
+            for a in comb(A,i):
+                if sum(a) in table:
+                    c = [a, table[sum(a)]]
+                    candidates = candidates + [c]
             if len(candidates) != 0:
                 done = True
                 c = candidates[0]
@@ -38,15 +45,15 @@ def fix(A_, B_):
         else:
             return False
 
-A = [1,4,0,5,6]
-B = [2,11,7]
-print('original\n')
-print('A: ', A, ', sum = ', sum(A))
-print('B: ', B, ', sum = ', sum(B))
+A = [11,5,7,1,50,4]
+B = [7,9,13,3,48]
+print('original')
+print('A: ', A, ' sum = ', sum(A))
+print('B: ', B, ' sum = ', sum(B))
 
 fix(A,B)
 
 print('results')
-print('A: ', A, ', sum = ', sum(A))
-print('B: ', B, ', sum = ', sum(B))
+print('A: ', A, ' sum = ', sum(A))
+print('B: ', B, ' sum = ', sum(B))
 
