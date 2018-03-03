@@ -62,7 +62,7 @@ GAME::GAME()
     mess_start_x = START_CELL_NBOX_X;
     mess_start_y = START_CELL_NBOX_Y + next_height + 1 + 1;
     mess_width = next_width;
-    mess_height = bin_start_y + nrow*HCELL;
+    mess_height = bin_start_y + nrow*HCELL - mess_start_y;
 
     bin = new int*[nrow];
     canvas = new int*[nrow];
