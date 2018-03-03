@@ -1,4 +1,10 @@
+# 180302
+#
+# the original code is from Irene's math professor
+# it originally allows duplicate copies of element to swap
+# 
 from itertools import product as product
+from itertools import combinations as comb
 
 def fix(A_, B_):
     A = A_
@@ -17,7 +23,7 @@ def fix(A_, B_):
         d = max(sa, sb) - avg
         done = False
         for i in range(min(len(A), len(B))):
-            candidates = [x for x in product(product(*([A]*i)), product(*([B]*i))) if sum(x[1]) - sum(x[0]) == d]
+            candidates = [x for x in product(comb(A,i), comb(B,i)) if sum(x[1]) - sum(x[0]) == d]
             if len(candidates) != 0:
                 done = True
                 c = candidates[0]
