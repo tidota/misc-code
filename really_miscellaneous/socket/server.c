@@ -1,6 +1,10 @@
 // server.c
 // 
-// Server code
+// Simple server side code.
+// It waits for a request from a client.
+// Once it receives a request, it gets a message from the client and sends a reply.
+// When it is done, it waits for another request and it will repeat for ever.
+// It does not handle andy error.
 //
 // references:
 // https://www.geeksforgeeks.org/socket-programming-cc/
@@ -11,8 +15,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <sys/socket.h>
-#include <netinet/in.h>
+#include <sys/socket.h> // socket
+#include <netinet/in.h> // sockaddr_in
 #define PORT 8080
 
 int main(int argc, char const *argv[])
@@ -40,18 +44,26 @@ int main(int argc, char const *argv[])
     // set the socket to listening mode (it returns a negative value if it fails)
     listen(server_fd, 3);
 
-    // wait for a request from a client (it returns a negative value if it fails)
-    client_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen);
+    printf("Listening... (Ctrl+C to quit)\n");
 
-    // read what it got (returns # of bytes it has read)
-    recv( client_socket , buffer, 1024, 0);
+    // each iteration handles one request from a client
+    while(1)
+    {
+        // wait for a request from a client (it returns a negative value if it fails)
+        client_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen);
 
-    printf("%s\n",buffer );
+        printf("Request received\n");
 
-    // write (similar to fwrite for file iO)
-    send(client_socket , "hello from server", strlen("hello from server") , 0 );
+        // read what it got (returns # of bytes it has read)
+        recv( client_socket , buffer, 1024, 0);
 
-    printf("Hello message sent\n");
+        printf("Client said: %s\n",buffer );
+
+        // write (similar to fwrite for file iO)
+        send(client_socket , "Hello from server", strlen("Hello from server") , 0 );
+
+        printf("Message sent to the client: Hello from server\n");
+    }
 
     return 0;
 }

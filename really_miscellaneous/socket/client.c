@@ -1,6 +1,8 @@
 // client.c
 //
-// client side
+// Simple client side code.
+// It first sends a message and then receives a reply from the server.
+// It does not handle any error.
 //
 // references:
 // https://www.geeksforgeeks.org/socket-programming-cc/
@@ -9,8 +11,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/socket.h>
-#include <netinet/in.h> 
+
+#include <sys/socket.h> // socket
+#include <netinet/in.h> // sockaddr_in
 #include <arpa/inet.h> // inet_addr
 #define PORT 8080
   
@@ -18,7 +21,6 @@ int main(int argc, char const *argv[])
 {
     int sock = 0;
     int valread;
-    struct sockaddr_in address;
     struct sockaddr_in serv_addr;
 
     char *hello = "Hello from client";
@@ -37,14 +39,14 @@ int main(int argc, char const *argv[])
     connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
 
     // write data
-    send(sock , "hello from client" , strlen("hello from client") , 0 );
+    send(sock , "Hello from client" , strlen("Hello from client") , 0 );
 
-    printf("Hello message sent\n");
+    printf("Message sent to the server: Hello from client\n");
 
     // read data
     recv( sock , buffer, 1024, 0);
 
-    printf("%s\n",buffer );
+    printf("Server said: %s\n",buffer );
 
     return 0;
 }
