@@ -1,6 +1,13 @@
 # Notes for blender
 
 
-# Slice a model
+# Segment a model
 
-https://www.quora.com/Im-new-to-Blender-3D-rendering-software-Is-there-a-simple-way-to-cut-a-solid-object-with-a-plane
+Resource: https://www.youtube.com/watch?v=HnuOkJfT8Wg
+
+1. Change the view to orthogonal
+1. Hit B and select a part to export
+1. Hit P and click "Selection"
+1. Export the separated mesh
+
+
