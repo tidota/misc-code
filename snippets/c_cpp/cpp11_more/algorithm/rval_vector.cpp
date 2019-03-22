@@ -65,17 +65,17 @@ public:
 };
 
 
-FOO foo(int i)
+FOO&& foo(int i)
 {
   if (i == 0)
   {
     cout << "making FOO with -1" << endl;
-    return FOO(-1);
+    return move(FOO(-1));
   }
 
   {
     cout << "making FOO with " << i << endl;
-    return FOO(i);
+    return move(FOO(i));
   }
 }
 
@@ -84,10 +84,10 @@ int main()
   int n = 10;
   func({n});
 
-  auto f = foo(0);
+  auto f = move(foo(0));
   f.func();
   cout << "------------------" << endl;
-  auto b = foo(10);
+  auto b = move(foo(10));
   b.func();
 
   cout << "------------------" << endl;
