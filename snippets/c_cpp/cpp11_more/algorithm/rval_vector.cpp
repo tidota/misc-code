@@ -16,16 +16,22 @@ void func(const vector<int>& vec)
 
 class BASE
 {
+private:
+  static int id_count;
+protected:
+  int id;
 public:
-  BASE()
+  BASE(): id(id_count++)
   {
-    cout << "BASE's constructor" << endl;
+    cout << "BASE's constructor (" << id << ")" << endl;
   }
   virtual ~BASE()
   {
-    cout << "BASE's destructor" << endl;
+    cout << "BASE's destructor (" << id << ")" << endl;
   }
 };
+
+int BASE::id_count = 0;
 
 class FOO: public BASE
 {
@@ -34,23 +40,23 @@ private:
 public:
   FOO(const int& param): val(param)
   {
-    cout << "FOO's constructor" << endl;
+    cout << "FOO's constructor (" << id << ")" << endl;
   }
   FOO(const FOO& src): val(src.val)
   {
-    cout << "FOO's copy constructor" << endl;
+    cout << "FOO's copy constructor (" << id << ")" << endl;
   }
   FOO(const FOO&& src): val(move(src.val))
   {
-    cout << "FOO's move constructor" << endl;
+    cout << "FOO's move constructor (" << id << ")" << endl;
   }
   virtual ~FOO()
   {
-    cout << "FOO's destructor" << endl;
+    cout << "FOO's destructor (" << id << ")" << endl;
   }
   void operator=(const FOO& src)
   {
-    cout << "FOO's copy assignment" << endl;
+    cout << "FOO's copy assignment (" << id << ")" << endl;
     val = src.val;
   }
   void operator=(const FOO&& src)
@@ -65,31 +71,36 @@ public:
 };
 
 
-FOO&& foo(int i)
+FOO&& foo(FOO&& src)
 {
-  if (i == 0)
-  {
-    cout << "making FOO with -1" << endl;
-    return move(FOO(-1));
-  }
-
-  {
-    cout << "making FOO with " << i << endl;
-    return move(FOO(i));
-  }
+  cout << "returning a FOO object" << endl;
+  src.func();
+  return move(src);
 }
 
 int main()
 {
+  cout << "Giving a rvalue to a function" << endl;
   int n = 10;
   func({n});
 
-  auto f = move(foo(0));
-  f.func();
   cout << "------------------" << endl;
-  auto b = move(foo(10));
-  b.func();
+  {
+    cout << "Passing a rvalue to a function and returning it" << endl;
+    auto f = foo(FOO(-1));
+    f.func();
+  }
+  cout << "------------------" << endl;
+  {
+    cout << "Converting a glvalue to a xvalue, passing it to a function"
+         << "and returning it" << endl;
+    auto f_temp = FOO(10);
+    cout << &f_temp << endl;
+    auto&& b = foo(move(f_temp));
+    cout << &b << endl;
+    b.func();
+  }
+  cout << "------------------" << endl;
 
-  cout << "------------------" << endl;
   return 0;
 }
