@@ -42,7 +42,7 @@ They take iterators and a lambda function to evaluate each element.
   *returns an iterator representing the first mismatch*
 - `is_permutation` (c++11)
 
-
+# Modification
 - `copy`
 - `copy_n` (c++11)
 - `copy_if` (c++11)
@@ -52,27 +52,35 @@ They take iterators and a lambda function to evaluate each element.
 - `swap`
 - `swap_ranges`
 - `iter_swap`
+
 - `transform`
+
 - `replace`
 - `replace_if`
 - `replace_copy`
 - `replace_copy_if`
 - `fill`
 - `fill_n`
+
 - `generate`
 - `generate_n`
+
+- `random_shuffle`
+- `shuffle` (c++11)
+
 - `remove`
 - `remove_if`
 - `remove_copy`
 - `remove_copy_if`
 - `unique`
 - `unique_copy`
+
 - `reverse`
 - `reverse_copy`
+
 - `rotate`
 - `rotate_copy`
-- `random_shuffle`
-- `shuffle` (c++11)
+
 
 - `is_partitioned` (c++11)
 - `partition`
@@ -108,3 +116,19 @@ They take iterators and a lambda function to evaluate each element.
   A - (A ∩ B)
 - `set_symmetric_difference`
   (A ∪ B) - (A ∩ B)
+
+# Heap
+A sequence of numbers is organized as a heap.
+- `make_heap`
+  organizes a container so its elements are disposed in a heap.
+- `pop_heap`
+  pop the maximum value from the heap and place it to the end of the container.
+- `push_heap`
+  push the element at the end to the heap.
+- `sort_heap`
+  performs the heap sort (?)
+- `is_heap`
+  True if the container is organized as a heap.
+- `is_heap_until`
+  returns an iterator pointing to the element which breaks the rule of heap.
+
