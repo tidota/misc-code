@@ -22,14 +22,13 @@ public class User
 
     static
     {
-        System.loadLibrary("wrapper");
+        System.loadLibrary("DBWrapper");
     }
 
     public native Node load();
 
     public static Node createNode(Node parent, String childName)
     {
-      System.out.println("in createNode");
       return new Node(parent, childName);
     }
 
