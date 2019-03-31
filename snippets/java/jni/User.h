@@ -9,16 +9,8 @@ extern "C" {
 #endif
 /*
  * Class:     User
- * Method:    func
- * Signature: (I)I
- */
-JNIEXPORT jint JNICALL Java_User_func
-  (JNIEnv *, jobject, jint);
-
-/*
- * Class:     User
  * Method:    load
- * Signature: ()LUser;
+ * Signature: ()LNode;
  */
 JNIEXPORT jobject JNICALL Java_User_load
   (JNIEnv *, jobject);

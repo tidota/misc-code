@@ -1,55 +1,49 @@
 import java.util.ArrayList;
 
+class Node
+{
+    public Node(Node newParent, String newName)
+    {
+      this.children = new ArrayList<Node>();
+      this.parent = newParent;
+      if (this.parent != null)
+      {
+        this.parent.children.add(this);
+      }
+      this.name = newName;
+    }
+
+    public String name;
+    public Node parent;
+    public ArrayList<Node> children;
+}
 public class User
 {
+
     static
     {
         System.loadLibrary("wrapper");
     }
 
-    public native int func(int val);
+    public native Node load();
 
-    public native User load();
-
-    public static User createNode(User parent, String childName)
+    public static Node createNode(Node parent, String childName)
     {
       System.out.println("in createNode");
-      return new User(parent, childName);
+      return new Node(parent, childName);
     }
 
     public static void main(String[] args)
     {
-        User usr = new User(null, "root");
-        System.out.println("calling func in the native code.");
-        int buff = usr.func(10);
-        System.out.println("Return val: " + buff);
+        User usr = new User();
 
-        User root = usr.load();
-        System.out.println("asdfsadf: " + root);
-        System.out.println(root.name);
-        /*
+        Node root = usr.load();
+        System.out.println("root: " + root);
         System.out.println(root.children.get(0).name);
         System.out.println(root.children.get(1).name);
         System.out.println(root.children.get(1).children.get(0).name);
         System.out.println(root.children.get(1).children.get(1).name);
         System.out.println(root.children.get(2).name);
-        */
     }
 
-    public User(User newParent, String newName)
-    {
-      System.out.println("Constructor");
-      this.parent = newParent;
-      if (this.parent != null)
-      {
-        System.out.println("?");
-        this.parent.children.add(this);
-      }
-      this.name = newName;
-      System.out.println("!" + this.name);
-    }
-
-    public String name;
-    public User parent;
-    public ArrayList<User> children;
 }
