@@ -5,16 +5,23 @@
 
 using namespace database;
 
+class database::NodeImpl
+{
+public:
+  jobject data;
+  NodeImpl(jobject jobj): data(jobj){}
+};
+
 JNIEnv * env_buff = nullptr;
 jobject jthis_buff;
 jmethodID callback;
 
-std::shared_ptr<jobject> createNode(
-  std::shared_ptr<jobject> parent, std::shared_ptr<Params> param)
+std::shared_ptr<NodeImpl> createNode(
+  std::shared_ptr<NodeImpl> parent, std::shared_ptr<Params> param)
 {
-  return std::make_shared<jobject>(
+  return std::make_shared<NodeImpl>(
     env_buff->CallObjectMethod(
-      jthis_buff, callback, (parent != nullptr)? *parent: nullptr,
+      jthis_buff, callback, (parent != nullptr)? parent->data: nullptr,
       env_buff->NewStringUTF(param->name.c_str())));
 }
 
@@ -29,6 +36,6 @@ JNIEXPORT jobject JNICALL Java_User_load(JNIEnv * env, jobject jthis)
   if (callback == NULL)
     return nullptr;
 
-  return *(load(createNode));
+  return load(createNode)->data;
 }
 
