@@ -5,5 +5,4 @@ find_package(JNI REQUIRED)
 include_directories(${JNI_INCLUDE_DIRS})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SRC sample.cpp)
-add_library(sample SHARED ${SRC})
+add_library(wrapper SHARED wrapper.cpp loader.cpp)

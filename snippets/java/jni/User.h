@@ -15,6 +15,14 @@ extern "C" {
 JNIEXPORT jint JNICALL Java_User_func
   (JNIEnv *, jobject, jint);
 
+/*
+ * Class:     User
+ * Method:    load
+ * Signature: ()LUser;
+ */
+JNIEXPORT jobject JNICALL Java_User_load
+  (JNIEnv *, jobject);
+
 #ifdef __cplusplus
 }
 #endif
