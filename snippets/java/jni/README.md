@@ -35,24 +35,24 @@ between them.
 
 1. Compile the Java code.
 
-  ```
-  javac User.java -h .
-  ```
+    ```
+    javac User.java -h .
+    ```
 
 1. Write C/C++ code based on the header file (+ Cmake)
 
 1. Compile the C/C++ code.
 
-  ```
-  mkdir build
-  cd build
-  cmake ..
-  make
-  cd ..
-  ```
+    ```
+    mkdir build
+    cd build
+    cmake ..
+    make
+    cd ..
+    ```
 
 1. Run the code
 
-  ```
-  java -Djava.library.path=./build User
-  ```
+    ```
+    java -Djava.library.path=./build User
+    ```
