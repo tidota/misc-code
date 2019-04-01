@@ -49,9 +49,6 @@ They take iterators and a lambda function to evaluate each element.
 - `copy_backward`
 - `move` (c++11)
 - `move_backward` (c++11)
-- `swap`
-- `swap_ranges`
-- `iter_swap`
 
 - `transform`
 
@@ -62,32 +59,42 @@ They take iterators and a lambda function to evaluate each element.
 - `fill`
 - `fill_n`
 
+## Generation of values
 - `generate`
 - `generate_n`
 
-- `random_shuffle`
-- `shuffle` (c++11)
-
+## Removing items
 - `remove`
 - `remove_if`
 - `remove_copy`
 - `remove_copy_if`
+
+## Removing duplicates
 - `unique`
 - `unique_copy`
 
+# Reorder
 - `reverse`
 - `reverse_copy`
 
 - `rotate`
 - `rotate_copy`
 
+- `swap`
+- `swap_ranges`
+- `iter_swap`
 
+- `random_shuffle`
+- `shuffle` (c++11)
+
+# Partition
 - `is_partitioned` (c++11)
 - `partition`
 - `stable_partition`
 - `partition_copy` (c++11)
 - `partition_point` (c++11)
 
+# Sorting
 - `sort`
 - `stable_sort`
 - `partial_sort`
@@ -96,9 +103,12 @@ They take iterators and a lambda function to evaluate each element.
 - `is_sorted_until` (c++11)
 - `nth_element`
 
+# Returns iterators to smallest/largest/equal items
 - `lower_bound`
 - `upper_bound`
 - `equal_range`
+
+# Returns true if it finds a given item in the list in O(log n)
 - `binary_search`
 
 # Sets
@@ -132,3 +142,25 @@ A sequence of numbers is organized as a heap.
 - `is_heap_until`
   returns an iterator pointing to the element which breaks the rule of heap.
 
+# Min/Max
+- `max` and `min`
+  returns larger or smaller one from the **two** given items.
+
+- `minmax` (c++11)
+  returns `pair` where the first one is the smallest and the second is the
+  largest.
+
+- `min_element` and `max_element`
+  returns an iterator of minimum or maximum in a range.
+
+- `minmax_element` (c++11)
+  returns `pair` where the first one is an iterator of the smallest and the
+  second one is an iterator of the largest.
+
+# Lexicography
+
+- `lexicographical_compare`
+  compare two ranges lexicographically.
+
+- `next_permutation`/`prev_permutation`
+  reorder so that the range is lexicographically larger/smaller.
