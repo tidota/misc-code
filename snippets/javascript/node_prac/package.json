@@ -1,0 +1,16 @@
+{
+  "name": "node_prac",
+  "version": "1.0.0",
+  "description": "Just for practice",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "formidable": "^1.2.1",
+    "http": "0.0.0",
+    "upper-case": "^1.1.3"
+  }
+}
