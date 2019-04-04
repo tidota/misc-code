@@ -26,3 +26,22 @@ In the case of this repo,
 node index.js
 ```
 
+To run the code by `npm start`:
+In package.json,
+```
+"scripts": {
+  "start": "node index.js",
+  ...
+},
+```
+
+You can see the results:
+```
+localhost:8080
+```
+
+To choose some feature:
+```
+localhost:8080/?file=upload
+```
+etc
