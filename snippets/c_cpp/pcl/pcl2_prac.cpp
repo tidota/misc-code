@@ -4,6 +4,8 @@
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/filters/statistical_outlier_removal.h>
 
+// http://pointclouds.org/documentation/tutorials/voxel_grid.php#voxelgrid
+// http://pointclouds.org/documentation/tutorials/statistical_outlier.php#statistical-outlier-removal
 int main (int argc, char** argv)
 {
   pcl::PCLPointCloud2::Ptr cloud (new pcl::PCLPointCloud2 ());
@@ -13,9 +15,10 @@ int main (int argc, char** argv)
   pcl::PCDReader reader;
   // Replace the path below with the path where you saved your file
   reader.read ("table_scene_lms400.pcd", *cloud); // Remember to download the file first!
+  // wget https://raw.github.com/PointCloudLibrary/data/master/tutorials/table_scene_lms400.pcd
 
   std::cerr << "PointCloud before filtering: " << cloud->width * cloud->height
-       << " data points (" << pcl::getFieldsList (*cloud) << ").";
+       << " data points (" << pcl::getFieldsList (*cloud) << ")." << std::endl;
 
   // Create the filtering object
   pcl::VoxelGrid<pcl::PCLPointCloud2> sor;
@@ -24,26 +27,28 @@ int main (int argc, char** argv)
   sor.filter (*cloud_filtered);
 
   std::cerr << "PointCloud after filtering: " << cloud_filtered->width * cloud_filtered->height
-       << " data points (" << pcl::getFieldsList (*cloud_filtered) << ").";
+       << " data points (" << pcl::getFieldsList (*cloud_filtered) << ")." << std::endl;
 
-  cloud.swap(cloud_filtered);
+  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2 (new pcl::PointCloud<pcl::PointXYZ>);
+  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered2 (new pcl::PointCloud<pcl::PointXYZ>);
+
+  pcl::fromPCLPointCloud2(*cloud_filtered, *cloud2);
 
   std::cerr << "Cloud before filtering: " << std::endl;
-  std::cerr << *cloud << std::endl;
+  std::cerr << *cloud2 << std::endl;
 
   // Create the filtering object
-  pcl::StatisticalOutlierRemoval<pcl::PCLPointCloud2> sor2;
-  sor2.setInputCloud (cloud);
+  pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor2;
+  sor2.setInputCloud (cloud2);
   sor2.setMeanK (50);
   sor2.setStddevMulThresh (1.0);
-  sor2.filter (*cloud_filtered);
+  sor2.filter (*cloud_filtered2);
 
   std::cerr << "Cloud after filtering: " << std::endl;
-  std::cerr << *cloud_filtered << std::endl;
+  std::cerr << *cloud_filtered2 << std::endl;
 
   pcl::PCDWriter writer;
-  writer.write ("table_scene_lms400_downsampled.pcd", *cloud_filtered,
-         Eigen::Vector4f::Zero (), Eigen::Quaternionf::Identity (), false);
+  writer.write<pcl::PointXYZ> ("table_scene_lms400_inliers.pcd", *cloud_filtered2, false);
 
   return (0);
 }
