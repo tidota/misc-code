@@ -4,7 +4,9 @@ cmake_minimum_required (VERSION 2.6)
 # Set the project name
 project (CPP_SAMPLES)
 
-SET(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -g -pedantic-errors -Wall")
+SET(CMAKE_C_FLAGS_DEF "${DMAKE_C_FLAGS}")
+SET(CMAKE_CXX_FLAGS_DEF "${DMAKE_CXX_FLAGS}")
+SET(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS_DEF} -g -pedantic-errors -Wall")
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g -pedantic-errors -Wall")
 
 # Add source directories
