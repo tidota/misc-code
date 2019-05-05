@@ -1,3 +1,9 @@
+// plc_prac.cpp
+//
+// 5/4/2019
+//
+// Practice of filtering including passthrough and projection
+
 #include <iostream>
 #include <pcl/point_types.h>
 #include <pcl/filters/passthrough.h>

@@ -1,3 +1,10 @@
+// pcl_prac2.cpp
+//
+// 5/4/2019
+//
+// Practice of filtering including downsampling and outlier removal
+//
+
 #include <iostream>
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
