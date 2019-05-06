@@ -15,8 +15,13 @@ int main(int argc, char** argv )
         printf("No image data \n");
         return -1;
     }
-    namedWindow("Display Image", WINDOW_AUTOSIZE );
-    imshow("Display Image", image);
+    Mat gray_image;
+    cvtColor(image, gray_image, COLOR_RGB2GRAY);
+
+    namedWindow("Original", WINDOW_AUTOSIZE );
+    namedWindow("Gray scale", WINDOW_AUTOSIZE );
+    imshow("Original", image);
+    imshow("Gray scale", gray_image);
     waitKey(0);
     return 0;
 }
