@@ -224,6 +224,10 @@ stream editor
 
   removes all "bar"
 
+- `sed -i 's/foo/bar/g' file.txt`
+
+  replace "foo" with "bar" in the file.
+
 ## ***awk***
 filters strings
 
