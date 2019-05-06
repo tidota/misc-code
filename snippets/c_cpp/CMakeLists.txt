@@ -21,4 +21,5 @@ add_subdirectory(io_cpp)
 add_subdirectory(xls)
 add_subdirectory(misc)
 add_subdirectory(pcl)
+add_subdirectory(opencv)
 
