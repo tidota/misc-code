@@ -51,7 +51,7 @@ int main(int argc, char** argv )
     Mat mod_image = image.clone();
     Mat mod_image_select = mod_image(Rect(5, 5, 20, 20));
     mod_image_select = Vec3b(0,0,0);
-    line(mod_image, Point2f(0, 0), Point2f(30, 15), Scalar(0, 1, 0), 2, LINE_8);
+    line(mod_image, Point2f(0, 0), Point2f(100, 50), Scalar(0, 255, 0), 2, LINE_8);
 
     std::cout << "Blending two images..." << std::endl;
     Mat blended_image;
