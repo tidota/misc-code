@@ -22,4 +22,5 @@ add_subdirectory(xls)
 add_subdirectory(misc)
 add_subdirectory(pcl)
 add_subdirectory(opencv)
+add_subdirectory(eigen)
 
