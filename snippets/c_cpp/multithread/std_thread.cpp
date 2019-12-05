@@ -12,18 +12,20 @@ class FOO
 {
 private:
     thread t;
-    mutex mtx;
+    static mutex mtx;
 public:
-    FOO();
+    FOO(int num);
     ~FOO();
 
     void func(int val);
 };
 
-FOO::FOO()
+mutex FOO::mtx;
+
+FOO::FOO(int num)
 {
     cout << "constructor" << endl;
-    t = thread(&FOO::func,this,0);
+    t = thread(&FOO::func,this,num);
 }
 
 FOO::~FOO()
@@ -41,6 +43,7 @@ void FOO::func(int val)
     for(int i = 0; i < 100; i++)
     {
         mtx.lock();
+	cout << "[" << t.get_id() << "] ";
         cout << "No. " << i << ": func() with the value: " << val << endl;
         mtx.unlock();
     }
@@ -48,9 +51,11 @@ void FOO::func(int val)
 
 int main()
 {
-    FOO foo;
+    FOO foo1(1);
+    FOO foo2(2);
 
-    foo.func(1);
+    foo1.func(10);
+    foo2.func(20);
 
     return 0;
 }
