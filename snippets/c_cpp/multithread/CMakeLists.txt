@@ -7,3 +7,6 @@ foreach (src ${SRC_FILES})
   add_executable(${target} ${src})
   target_link_libraries(${target} pthread)
 endforeach ()
+
+add_subdirectory(openmp)
+
