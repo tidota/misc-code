@@ -17,7 +17,8 @@
 
 #include <sys/socket.h> // socket
 #include <netinet/in.h> // sockaddr_in
-#define PORT 8080
+#include <arpa/inet.h> // inet_ntoa
+#define DEFAULT_PORT 8080
 
 int main(int argc, char const *argv[])
 {
@@ -28,6 +29,13 @@ int main(int argc, char const *argv[])
     int addrlen = sizeof(address);
     char buffer[1024] = {0};
 
+    int port = DEFAULT_PORT;
+    if (argc == 2)
+    {
+        sscanf(argv[1], "%d", &port);
+    }
+    printf("PORT#: %d\n", port);
+
     // socket file descriptor (it returns 0 if it fails)
     server_fd = socket(AF_INET, SOCK_STREAM, 0);
     // options to the socket (it returns non-zero if it fails)
@@ -36,7 +44,7 @@ int main(int argc, char const *argv[])
     // settings of address and port
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons( PORT );
+    address.sin_port = htons(port);
       
     // bind the socket and the address (it returns a negative value if it fails)
     bind(server_fd, (struct sockaddr *)&address, sizeof(address));
@@ -55,12 +63,12 @@ int main(int argc, char const *argv[])
         printf("Request received\n");
 
         // read what it got (returns # of bytes it has read)
-        recv( client_socket , buffer, 1024, 0);
+        recv(client_socket, buffer, 1024, 0);
 
-        printf("Client said: %s\n",buffer );
+        printf("Client(%s) said: %s\n", (char *)inet_ntoa(address.sin_addr), buffer);
 
         // write (similar to fwrite for file iO)
-        send(client_socket , "Hello from server", strlen("Hello from server") , 0 );
+        send(client_socket, "Hello from server", strlen("Hello from server"), 0);
 
         printf("Message sent to the client: Hello from server\n");
     }
