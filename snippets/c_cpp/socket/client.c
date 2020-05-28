@@ -28,26 +28,42 @@ int main(int argc, char const *argv[])
     char buffer[1024] = {0};
 
     char add[32] = "127.0.0.1";
-    int port = DEFAULT_PORT;
+    int port_dest = DEFAULT_PORT;
     if (argc >= 2)
     {
         strcpy(add, argv[1]);
     }
-    if (argc == 3)
+    if (argc >= 3)
     {
-        sscanf(argv[2], "%d", &port);
+        sscanf(argv[2], "%d", &port_dest);
     }
 
     printf("ADDRESS: %s\n", add);
-    printf("PORT#: %d\n", port);
+    printf("PORT#: %d\n", port_dest);
 
     // it returns a negative value if it fails
     sock = socket(AF_INET, SOCK_STREAM, 0);
   
+    // if the source port # is specified,
+    if (argc >= 4)
+    {
+        int port_src;
+        struct sockaddr_in clnt_addr;
+        sscanf(argv[3], "%d", &port_src);
+        clnt_addr.sin_family = AF_INET;
+        clnt_addr.sin_addr.s_addr = INADDR_ANY;
+        clnt_addr.sin_port = htons(port_src);
+        clnt_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+        if (bind(sock, (struct sockaddr*) &clnt_addr, sizeof(struct sockaddr_in)) == 0)
+            printf("Specified the source port #: %d\n", port_src);
+        else
+            printf("Failed to specify the source port #: %d\n", port_src); 
+    }
+
     // settings of server address and port
     serv_addr.sin_addr.s_addr = inet_addr(add);
     serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(port);
+    serv_addr.sin_port = htons(port_dest);
       
     // connect to the server (it returns a negative value if it fails)
     int suc = connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
