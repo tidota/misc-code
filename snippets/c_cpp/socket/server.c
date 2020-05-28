@@ -65,7 +65,7 @@ int main(int argc, char const *argv[])
         // read what it got (returns # of bytes it has read)
         recv(client_socket, buffer, 1024, 0);
 
-        printf("Client(%s) said: %s\n", (char *)inet_ntoa(address.sin_addr), buffer);
+        printf("Client(%s:%u) said: %s\n", (char *)inet_ntoa(address.sin_addr), address.sin_port, buffer);
 
         // write (similar to fwrite for file iO)
         send(client_socket, "Hello from server", strlen("Hello from server"), 0);
