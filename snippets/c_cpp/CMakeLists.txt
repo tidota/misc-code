@@ -23,4 +23,5 @@ add_subdirectory(misc)
 add_subdirectory(pcl)
 add_subdirectory(opencv)
 add_subdirectory(eigen)
+add_subdirectory(protobuf)
 

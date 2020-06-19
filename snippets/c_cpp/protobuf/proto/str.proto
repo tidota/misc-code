@@ -1,0 +1,6 @@
+syntax = "proto2";
+package str;
+
+message Str {
+    repeated string str = 1;
+}

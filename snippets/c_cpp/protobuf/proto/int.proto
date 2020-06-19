@@ -1,0 +1,6 @@
+syntax = "proto2";
+package int;
+
+message Int {
+    repeated int32 val = 1;
+}
