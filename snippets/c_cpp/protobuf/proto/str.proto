@@ -1,5 +1,5 @@
 syntax = "proto2";
-package str;
+package customMess;
 
 message Str {
     repeated string str = 1;

@@ -1,11 +1,11 @@
 #include <iostream>
-#include "proto/int.pb.h"
+#include "proto/intlist.pb.h"
 #include "proto/str.pb.h"
 
 int main()
 {
-  message::Int integer;
-  message::Str string;
+  customMess::Intlist integer;
+  customMess::Str string;
 
   std::cout << "Hello World Protobuf" << std::endl;
 

@@ -1,6 +1,6 @@
 syntax = "proto2";
-package int;
+package customMess;
 
-message Int {
+message Intlist {
     repeated int32 val = 1;
 }
