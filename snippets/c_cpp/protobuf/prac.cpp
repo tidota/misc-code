@@ -1,6 +1,6 @@
 #include <iostream>
-#include "proto/intlist.pb.h"
-#include "proto/str.pb.h"
+#include <proto/intlist.pb.h>
+#include <proto/str.pb.h>
 
 int main()
 {
