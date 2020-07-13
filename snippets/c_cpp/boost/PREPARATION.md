@@ -16,6 +16,23 @@ sudo make install
 ## To install Boost1.66
 https://stackoverflow.com/questions/8430332/uninstall-boost-and-install-another-version
 https://stackoverflow.com/questions/3016448/how-can-i-get-cmake-to-find-my-alternative-boost-installation
+```
+sudo apt-get update
+sudo apt-get -y --purge remove libboost-all-dev libboost-doc libboost-dev
+sudo rm -f /usr/local/lib/libboost_*
+sudo rm -f /usr/local/include/boost
+sudo apt-get -y install build-essential g++ python-dev autotools-dev libicu-dev libbz2-dev
+cd
+wget http://downloads.sourceforge.net/project/boost/boost/1.66.0/boost_1_66_0.tar.gz
+tar -zxvf boost_1_66_0.tar.gz
+cd boost_1_66_0
+#cpuCores=`cat /proc/cpuinfo | grep "cpu cores" | uniq | awk '{print $NF}'`
+#echo "Available CPU cores: "$cpuCores
+cpuCores=2
+# this will generate ./b2
+./bootstrap.sh
+sudo ./b2 --with=all -j $cpuCores install
+```
 
 Then, set the following variables accordingly.
 ```
