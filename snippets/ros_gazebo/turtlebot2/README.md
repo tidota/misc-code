@@ -92,13 +92,14 @@ Then, kill the telop node and get the scripts to test
 ```
 cd
 git clone https://github.com/markwsilliman/turtlebot.git turtlebot_scripts
+cd turtlebot_scripts
 ```
 
-edit the script
+Edit the script
 ```
 vi ./go_to_specific_point_on_map.py
 ```
-at line83, replace this line
+At line 83, replace this line
 ```
 position = {'x': 1.22, 'y' : 2.56}
 ```
@@ -106,10 +107,10 @@ with
 ```
 position = {'x': -0.5, 'y' : -1.5}
 ```
+Then, run the script.
 
-Then,
 ```
-python ~/helloworld/go_to_specific_point_on_map.py
+python ~/go_to_specific_point_on_map.py
 ```
 
 Finally, it looks like this.
