@@ -110,7 +110,7 @@ position = {'x': -0.5, 'y' : -1.5}
 Then, run the script.
 
 ```
-python ~/go_to_specific_point_on_map.py
+python ./go_to_specific_point_on_map.py
 ```
 
 Finally, it looks like this.
