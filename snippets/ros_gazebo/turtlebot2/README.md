@@ -38,6 +38,7 @@ Run Gazebo environment
 ```
 roslaunch turtlebot_gazebo turtlebot_world.launch
 ```
+![](./gazebo.jpg)
 
 _Note: The following steps are based on the tutorials to run an actual Turtlebot.
 But you are running a simulated Turtlebot in Gazebo. You need to ignore `minimal.launch` and replace `turtlebot_navigation` with `turtlebot_gazebo`_
