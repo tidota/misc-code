@@ -21,3 +21,6 @@ foreach (src ${SRC_FILES})
   add_executable(${target} ${src})
   target_link_libraries(${target} ${Boost_LIBRARIES} pthread)
 endforeach ()
+
+add_subdirectory(asio1)
+add_subdirectory(asio2)
