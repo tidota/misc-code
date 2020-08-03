@@ -11,7 +11,7 @@ set( Boost_NO_SYSTEM_PATHS on CACHE BOOL "Do not search system for Boost" )
 
 # Then, just run this
 # https://cmake.org/cmake/help/v3.15/module/FindBoost.html
-find_package(Boost 1.66 REQUIRED COMPONENTS system locale regex)
+find_package(Boost 1.66 REQUIRED COMPONENTS system locale regex thread)
 #find_package(Boost 1.56 REQUIRED COMPONENTS date_time filesystem iostreams)
 include_directories(${Boost_INCLUDE_DIRS})
 
