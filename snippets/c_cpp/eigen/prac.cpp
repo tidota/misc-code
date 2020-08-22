@@ -33,5 +33,13 @@ int main()
   v = v * 5;
   std::cout << "v: " << std::endl << v << std::endl;
 
+  VectorXd v2;
+  v2 = v;
+  v2(1) = 500;
+
+  std::cout << "v2 = v1 and v2(1) = 500" << std::endl;
+  std::cout << "v:  " << std::endl << v << std::endl;
+  std::cout << "v2: " << std::endl << v2 << std::endl;
+
   return 0;
 }
