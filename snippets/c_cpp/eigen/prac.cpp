@@ -41,5 +41,10 @@ int main()
   std::cout << "v:  " << std::endl << v << std::endl;
   std::cout << "v2: " << std::endl << v2 << std::endl;
 
+  VectorXd v3(2);
+  v3 << 1, 2;
+  std::cout << "v3: " << std::endl;
+  std::cout << v3 << std::endl;
+
   return 0;
 }
