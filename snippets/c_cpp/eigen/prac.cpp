@@ -46,5 +46,13 @@ int main()
   std::cout << "v3: " << std::endl;
   std::cout << v3 << std::endl;
 
+  VectorXd v4(3);
+  v4 << 1, 0, 0;
+  MatrixXd v4v4 = v4 * v4.transpose();
+  std::cout << "v4: " << std::endl;
+  std::cout << v4 << std::endl;
+  std::cout << "mat = v4 * v4.transpose()" << std::endl;
+  std::cout << v4v4 << std::endl;
+
   return 0;
 }
