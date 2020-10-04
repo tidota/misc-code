@@ -10,7 +10,7 @@
 double fn1 (double x, void * params)
 {
   (void)(params); /* avoid unused parameter warning */
-  return cos(x) + 1.0;
+  return (x - 1.5)*(x - 1.5);
 }
 
 int
@@ -20,7 +20,7 @@ main (void)
   int iter = 0, max_iter = 100;
   const gsl_min_fminimizer_type *T;
   gsl_min_fminimizer *s;
-  double m = 2.0, m_expected = M_PI;
+  double m = 2.0;
   double a = 0.0, b = 6.0;
   gsl_function F;
 
@@ -34,13 +34,13 @@ main (void)
   printf ("using %s method\n",
           gsl_min_fminimizer_name (s));
 
-  printf ("%5s [%9s, %9s] %9s %10s %9s\n",
+  printf ("%5s [%9s, %9s] %9s %9s\n",
           "iter", "lower", "upper", "min",
-          "err", "err(est)");
+          "err(est)");
 
-  printf ("%5d [%.7f, %.7f] %.7f %+.7f %.7f\n",
+  printf ("%5d [%.7f, %.7f] %.7f %.7f\n",
           iter, a, b,
-          m, m - m_expected, b - a);
+          m, b - a);
 
   do
     {
@@ -58,9 +58,9 @@ main (void)
         printf ("Converged:\n");
 
       printf ("%5d [%.7f, %.7f] "
-              "%.7f %+.7f %.7f\n",
+              "%.7f %.7f\n",
               iter, a, b,
-              m, m - m_expected, b - a);
+              m, b - a);
     }
   while (status == GSL_CONTINUE && iter < max_iter);
 
