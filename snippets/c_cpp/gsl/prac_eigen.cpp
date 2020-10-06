@@ -20,9 +20,9 @@ struct func_params
 double fn1 (double x, void * params)
 {
   struct func_params *p = (struct func_params*)params;
-  MatrixXd invA(p->invA);
-  MatrixXd invB(p->invB);
-  MatrixXd C = (x * invA + (1-x) * invB).inverse();
+  // MatrixXd invA = p->invA;
+  // MatrixXd invB = p->invB;
+  MatrixXd C = (x * p->invA + (1-x) * p->invB).inverse();
   // MatrixXd A = MatrixXd::Zero(2,2);
   // A << 0.0227047020, 0.0165085573, 0.0165085573, 0.0227047020;
   // MatrixXd B = MatrixXd::Zero(2,2);
