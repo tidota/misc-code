@@ -200,3 +200,26 @@ ros2 bag record -o <output> <topic name>
 ros2 bag info <rosbag data>
 ros2 bag play <rosbag data>
 ```
+
+# workspace
+
+https://index.ros.org/doc/ros2/Tutorials/Workspace/Creating-A-Workspace/
+
+
+```
+mkdir -p ~/dev_ws/src
+cd ~/dev_ws/src
+git clone https://github.com/ros/ros_tutorials.git -b dashing-devel
+rosdep install -i --from-path src --rosdistro dashing -y
+colcon build
+. install/local_setup.bash
+```
+
+colcon build options:
+- `--packages-up-to` builds the package you want, plus all its dependencies, but not the whole workspace (saves time)
+- `--symlink-install` saves you from having to rebuild every time you tweak python scripts
+- `--event-handlers console_direct+` shows console output while building (can otherwise be found in the log directory)
+
+## create a pakcage
+
+https://index.ros.org/doc/ros2/Tutorials/Creating-Your-First-ROS2-Package/
