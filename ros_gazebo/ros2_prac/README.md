@@ -42,6 +42,8 @@ Most of the commands are straight forward.
 | `rqt`* | N/A? |
 | `rqt_graph`* | `rosrun rqt_graph rqt_graph` |
 | `ros2 run rqt_console rqt_console`* | `rosrun rqt_console rqt_console` |
+| `ros2 pkg create --build-type ament_cmake/python [--node-name <node>] <package>` | `catkin_create_pkg <package> <dependencies>` |
+| `colcon build [--packages-select <package>]` | `catkin_make` |
 
 ## \*Note: must install additional packages.
 
