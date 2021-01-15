@@ -225,3 +225,17 @@ colcon build options:
 ## create a pakcage
 
 https://index.ros.org/doc/ros2/Tutorials/Creating-Your-First-ROS2-Package/
+
+```
+ros2 pkg create --build-type ament_cmake cpp_pubsub
+```
+After writing code,
+```
+rosdep install -i --from-path src --rosdistro dashing -y
+colcon build --packages-select cpp_pubsub
+```
+To use it,
+```
+. install/setup.bash
+```
+
