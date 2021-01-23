@@ -239,3 +239,7 @@ To use it,
 . install/setup.bash
 ```
 
+To create a package with both cpp and python,
+create a package with cpp first then add some files.
+For more details, refer to
+https://roboticsbackend.com/ros2-package-for-both-python-and-cpp-nodes/
