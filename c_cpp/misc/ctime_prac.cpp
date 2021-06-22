@@ -7,7 +7,7 @@ void test1()
     std::cout << "print the current time" << std::endl;
 
     time_t rawtime;
-    struct tm * timeinfo;
+    struct tm *timeinfo;
 
     time(&rawtime);
     timeinfo = localtime(&rawtime);
@@ -23,22 +23,18 @@ void test2()
     // https://www.cplusplus.com/reference/ctime/mktime/
     std::cout << "create a specific date" << std::endl;
 
-    time_t rawtime;
-    struct tm *timeinfo;
+    struct tm timeinfo = {.tm_mday = 1};
 
-    time(&rawtime);
-    timeinfo = localtime(&rawtime);
-
-    timeinfo->tm_sec = 0;
-    timeinfo->tm_min = 30;
-    timeinfo->tm_hour = 20;
-    timeinfo->tm_mday = 22;
-    timeinfo->tm_mon = 6 - 1;
-    timeinfo->tm_year = 2021 - 1900;
-    mktime(timeinfo);
+    timeinfo.tm_sec = 0;
+    timeinfo.tm_min = 30;
+    timeinfo.tm_hour = 20;
+    timeinfo.tm_mday = 22;
+    timeinfo.tm_mon = 6 - 1;
+    timeinfo.tm_year = 2021 - 1900;
+    mktime(&timeinfo);
 
     char buff[80];
-    strftime (buff,80,"Now it's %I:%M%p, %B %d, %Y, %a.",timeinfo);
+    strftime (buff,80,"Now it's %I:%M%p, %B %d, %Y, %a.",&timeinfo);
 
     std::cout << buff << std::endl << std::endl;
 }
@@ -48,10 +44,7 @@ void test3()
     std::cout << "calculate the days between two dates" << std::endl;
 
     time_t rawtime;
-    struct tm d1, d2;
-
-    time(&rawtime);
-    d1 = *localtime(&rawtime);
+    struct tm d1 = {.tm_mday=1}, d2 = {.tm_mday=1};
 
     d1.tm_sec = 0;
     d1.tm_min = 0;
