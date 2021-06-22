@@ -2,6 +2,13 @@
 
 #include <ctime>
 
+void print(struct tm * timeinfo)
+{
+    char buff[80];
+    strftime (buff,80,"Now it's %I:%M%p, %B %d, %Y, %a.",timeinfo);
+    std::cout << buff << std::endl << std::endl;
+}
+
 void test1()
 {
     std::cout << "print the current time" << std::endl;
@@ -12,10 +19,7 @@ void test1()
     time(&rawtime);
     timeinfo = localtime(&rawtime);
 
-    char buff[80];
-    strftime (buff,80,"Now it's %I:%M%p, %B %d, %Y, %a.",timeinfo);
-
-    std::cout << buff << std::endl << std::endl;
+    print(timeinfo);
 }
 
 void test2()
@@ -33,22 +37,15 @@ void test2()
     timeinfo.tm_year = 2021 - 1900;
     mktime(&timeinfo);
 
-    char buff[80];
-    strftime (buff,80,"Now it's %I:%M%p, %B %d, %Y, %a.",&timeinfo);
-
-    std::cout << buff << std::endl << std::endl;
+    print(&timeinfo);
 }
 
 void test3()
 {
     std::cout << "calculate the days between two dates" << std::endl;
 
-    time_t rawtime;
     struct tm d1 = {.tm_mday=1}, d2 = {.tm_mday=1};
 
-    d1.tm_sec = 0;
-    d1.tm_min = 0;
-    d1.tm_hour = 0;
     d1.tm_mday = 15;
     d1.tm_mon = 6 - 1;
     d1.tm_year = 2021 - 1900;
@@ -58,6 +55,34 @@ void test3()
     double diff_time = difftime(mktime(&d2), mktime(&d1));
     std::cout << "diff time in sec: " << diff_time << std::endl;
     std::cout << "diff time in days: " << (diff_time / 3600 / 24) << std::endl;
+
+    std::cout << std::endl;
+}
+
+void test4()
+{
+    std::cout << "calcualte a date X days ahead of the other" << std::endl;
+
+    std::cout << "orig:";
+
+    struct tm orig = {.tm_mday=1};
+    orig.tm_mday = 15;
+    orig.tm_mon = 6 - 1;
+    orig.tm_year = 2021 - 1900;
+
+    print(&orig);
+
+    time_t orig_time = mktime(&orig);
+
+    time_t next_time = orig_time + 60 * 24 * 3600;
+    struct tm next = *localtime(&next_time);
+    std::cout << "60 days later:";
+    print(&next);
+
+    time_t prev_time = orig_time - 365 * 24 * 3600;
+    struct tm prev = *localtime(&prev_time);
+    std::cout << "365 days before:";
+    print(&prev);
 }
 
 int main()
@@ -67,6 +92,8 @@ int main()
     test2();
 
     test3();
+
+    test4();
 
     return 0;
 }
