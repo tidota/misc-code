@@ -1,9 +1,9 @@
+cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS_DEF} -g -Wall")
 
-cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
-project(MY_GRAND_PROJECT)
+project(pcl_prac)
 
 find_package(PCL 1.8 REQUIRED)
 include_directories(${PCL_INCLUDE_DIRS})

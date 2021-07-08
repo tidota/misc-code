@@ -11,7 +11,7 @@
 
 using namespace std;
 
-int update(vector<int>& vec, int start, int end)
+void update(vector<int>& vec, int start, int end)
 {
     for (int i = start; i < end; ++i)
         vec[i] += 100;

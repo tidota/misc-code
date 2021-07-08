@@ -1,5 +1,7 @@
+cmake_minimum_required(VERSION 3.16)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 
+project(cpp11_prac)
 file(GLOB SRC_FILES *.cpp)
 
 foreach (src ${SRC_FILES})

@@ -1,4 +1,7 @@
+cmake_minimum_required(VERSION 3.16)
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
+
+project(socket_prac)
 
 file(GLOB SRC_FILES *.c)
 

@@ -1,4 +1,7 @@
+cmake_minimum_required(VERSION 3.16)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+
+project(xlnt_prac)
 
 find_library(xlnt_path NAMES xlnt)
 message(STATUS ${xlnt_path})

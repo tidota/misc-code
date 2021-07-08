@@ -1,5 +1,8 @@
+cmake_minimum_required(VERSION 3.16)
 SET(CMAKE_C_FLAGS "")
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++03")
+
+project(pointers_prac)
 
 file(GLOB C_SRC_FILES *.c)
 
