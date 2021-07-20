@@ -5,6 +5,20 @@ Reference: https://emanual.robotis.com/docs/en/platform/turtlebot3/navigation/
 # Real world
 
 ## Turtlebot3
+
+Note: establish an access point and have turtlebot3 automatically access it
+
+Find the IP of turtlebot3
+```
+arp -a
+```
+
+Log in to turtlebot3 by SSH
+```
+ssh ubuntu@<IP address>
+```
+
+Then, launch the file.
 ```
 ros2 launch turtlebot3_bringup robot.launch.py
 ```
