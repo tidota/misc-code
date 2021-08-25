@@ -81,16 +81,18 @@ copies a file and a directory
 ## ***rm***
 deletes a file
 
-_note: once you delete a file by rm command, you cannot recover it. If you are dealing with very important files, you should have backups._
+<strong style="color:red">Note: once you delete a file by `rm` command, you CANNOT recover it. If you are dealing with very important files, you should download them for backups.</strong>
 
 ## ***rmdir***
-deletes an EMPTY directory
+deletes an ***EMPTY*** directory
 
 You need to clean inside the directory before removing it.
 
-rm command with -r option will delete all contents including the directory.
+`rm` command with `-r` option will delete all contents including the directory.
+<strong style="color:red">Note: Again, once you delete a file by `rm` command, you CANNOT recover it. So please be careful!</strong>
 
 
+<!--
 As of April 2017, UH Unix (SunOS) only removes files but keeps directories unchanged for some reasons.
 This problem may be solved after they switch their OS to Redhat Linux this Fall.
 
@@ -103,6 +105,7 @@ At this point, these commands remove a directory with files and subdirectories u
 - `find [directory to remove] -depth -exec rmdir {} \;`
 
   This removes all directories (including the top one) from the bottom to the top.
+-->
 
 ## ***chmod***
 changes access rights
@@ -256,7 +259,7 @@ searches files by looking through directories
   searches html files in /usr/local/doc/gcc
 
 # Editors
-## ***pico***
+## ***pico/nano***
 ## ***vi***
 ## ***emacs***
 
