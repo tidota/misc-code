@@ -42,6 +42,8 @@ shows manual of command
 - `man ls`
 - `man gcc`
 
+When you want to close the manual, hit `q`.
+
 ## ***whereis***
 shows the location of the executable of a command
 
@@ -261,6 +263,9 @@ searches files by looking through directories
 # Editors
 ## ***pico/nano***
 ## ***vi***
+
+This can be good to start: [https://www.cs.colostate.edu/helpdocs/vi.html](https://www.cs.colostate.edu/helpdocs/vi.html)
+
 ## ***emacs***
 
 # SSH
