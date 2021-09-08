@@ -30,3 +30,29 @@ Then,
 roslaunch simple_navigation_goals gazebo_navigation_rviz.launch
 ```
 On Rviz, you can provide messages for initial pose and goals.
+
+# SLAM
+
+## Start the simulation
+```
+roslaunch turtlebot3_gazebo turtlebot3_world.launch
+```
+
+## Manual control
+```
+roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
+```
+
+## Mapping
+```
+roslaunch turtlebot3_slam turtlebot3_slam.launch
+```
+To save the map
+```
+rosrun map_server map_saver -f ~/turtlebot_map
+```
+
+## Navigation
+```
+roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/turtlebot_map.yaml
+```
