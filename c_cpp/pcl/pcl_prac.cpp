@@ -11,8 +11,8 @@
 #include <pcl/ModelCoefficients.h>
 #include <pcl/filters/project_inliers.h>
 
-// http://pointclouds.org/documentation/tutorials/passthrough.php#passthrough
-// http://pointclouds.org/documentation/tutorials/project_inliers.php#project-inliers
+// http://pointclouds.org/documentation/tutorials/passthrough.html#passthrough
+// http://pointclouds.org/documentation/tutorials/project_inliers.html#project-inliers
 int main()
 {
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);

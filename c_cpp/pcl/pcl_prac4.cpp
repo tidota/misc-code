@@ -5,6 +5,7 @@
 // Practice of segmentation
 
 #include <iostream>
+#include <iomanip>
 #include <pcl/point_types.h>
 #include <pcl/sample_consensus/method_types.h>
 #include <pcl/sample_consensus/model_types.h>
@@ -12,7 +13,7 @@
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/filters/extract_indices.h>
 
-// http://pointclouds.org/documentation/tutorials/planar_segmentation.php#planar-segmentation
+// http://pointclouds.org/documentation/tutorials/planar_segmentation.html#planar-segmentation
 int main()
 {
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
@@ -38,6 +39,7 @@ int main()
   pcl::console::print_highlight("cloud\n");
   for (size_t i = 0; i < cloud->points.size(); ++i)
   {
+    std::cout << std::setw(3) << i << ": ";
     std::cout << cloud->points[i].x << ", "
               << cloud->points[i].y << ", "
               << cloud->points[i].z << std::endl;
@@ -60,6 +62,7 @@ int main()
   pcl::console::print_highlight("cloud_filtered\n");
   for (size_t i = 0; i < cloud_filtered->points.size(); ++i)
   {
+    std::cout << std::setw(3) << i << ": ";
     std::cout << cloud_filtered->points[i].x << ", "
               << cloud_filtered->points[i].y << ", "
               << cloud_filtered->points[i].z << std::endl;

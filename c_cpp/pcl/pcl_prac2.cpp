@@ -11,8 +11,8 @@
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/filters/statistical_outlier_removal.h>
 
-// http://pointclouds.org/documentation/tutorials/voxel_grid.php#voxelgrid
-// http://pointclouds.org/documentation/tutorials/statistical_outlier.php#statistical-outlier-removal
+// http://pointclouds.org/documentation/tutorials/voxel_grid.html#voxelgrid
+// http://pointclouds.org/documentation/tutorials/statistical_outlier.html#statistical-outlier-removal
 int main (int argc, char** argv)
 {
   pcl::PCLPointCloud2::Ptr cloud (new pcl::PCLPointCloud2 ());
