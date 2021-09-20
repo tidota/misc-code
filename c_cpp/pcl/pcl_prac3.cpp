@@ -28,6 +28,10 @@
 
 int main()
 {
+  std::cout << " ================================================" << std::endl;
+  std::cout << "      Interative Closest Point (ICP)             " << std::endl;
+  std::cout << " ================================================" << std::endl;
+
   pcl::console::print_highlight ("Creating point clouds...");
 
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud1 (new pcl::PointCloud<pcl::PointXYZ>);

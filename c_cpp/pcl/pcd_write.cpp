@@ -4,6 +4,10 @@
 
 int main (int argc, char** argv)
 {
+  std::cout << " ================================================" << std::endl;
+  std::cout << "       　Saving point clouds into a file         " << std::endl;
+  std::cout << " ================================================" << std::endl;
+
   pcl::PointCloud<pcl::PointXYZ> cloud;
 
   // Fill in the cloud data

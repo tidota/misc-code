@@ -11,12 +11,16 @@
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/filters/statistical_outlier_removal.h>
 
-// http://pointclouds.org/documentation/tutorials/voxel_grid.html#voxelgrid
-// http://pointclouds.org/documentation/tutorials/statistical_outlier.html#statistical-outlier-removal
+// https://pcl.readthedocs.io/projects/tutorials/en/latest/voxel_grid.html#voxelgrid
+// https://pcl.readthedocs.io/projects/tutorials/en/latest/statistical_outlier.html#statistical-outlier-removal
 int main (int argc, char** argv)
 {
   pcl::PCLPointCloud2::Ptr cloud (new pcl::PCLPointCloud2 ());
   pcl::PCLPointCloud2::Ptr cloud_filtered (new pcl::PCLPointCloud2 ());
+
+  std::cout << " ================================================" << std::endl;
+  std::cout << "                 Voxel Grid                      " << std::endl;
+  std::cout << " ================================================" << std::endl;
 
   // Fill in the cloud data
   pcl::PCDReader reader;
@@ -38,6 +42,10 @@ int main (int argc, char** argv)
 
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2 (new pcl::PointCloud<pcl::PointXYZ>);
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered2 (new pcl::PointCloud<pcl::PointXYZ>);
+
+  std::cout << " ================================================" << std::endl;
+  std::cout << "          Statistical Outlier Removal            " << std::endl;
+  std::cout << " ================================================" << std::endl;
 
   pcl::fromPCLPointCloud2(*cloud_filtered, *cloud2);
 

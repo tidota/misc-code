@@ -11,8 +11,8 @@
 #include <pcl/ModelCoefficients.h>
 #include <pcl/filters/project_inliers.h>
 
-// http://pointclouds.org/documentation/tutorials/passthrough.html#passthrough
-// http://pointclouds.org/documentation/tutorials/project_inliers.html#project-inliers
+// https://pcl.readthedocs.io/projects/tutorials/en/latest/passthrough.html#passthrough
+// https://pcl.readthedocs.io/projects/tutorials/en/latest/project_inliers.html#project-inliers
 int main()
 {
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
@@ -29,6 +29,10 @@ int main()
     cloud->points[i].y = 1024 * rand () / (RAND_MAX + 1.0f);
     cloud->points[i].z = 1024 * rand () / (RAND_MAX + 1.0f);
   }
+
+  std::cout << " ================================================" << std::endl;
+  std::cout << "                 Passthrough                     " << std::endl;
+  std::cout << " ================================================" << std::endl;
 
   std::cerr << "Cloud before filtering: " << std::endl;
   for (size_t i = 0; i < cloud->points.size (); ++i)
@@ -51,6 +55,12 @@ int main()
                         << cloud_filtered->points[i].z << std::endl;
 
   cloud.swap(cloud_filtered);
+
+  std::cout << " ================================================" << std::endl;
+  std::cout << "                 Projection                      " << std::endl;
+  std::cout << " ================================================" << std::endl;
+
+  std::cout << " The points will be projected to a specified plane. " << std::endl;
 
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_projected (new pcl::PointCloud<pcl::PointXYZ>);
 

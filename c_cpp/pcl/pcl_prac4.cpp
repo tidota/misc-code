@@ -13,9 +13,14 @@
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/filters/extract_indices.h>
 
-// http://pointclouds.org/documentation/tutorials/planar_segmentation.html#planar-segmentation
+// https://pcl.readthedocs.io/projects/tutorials/en/latest/planar_segmentation.html#planar-segmentation
 int main()
 {
+  std::cout << " ================================================" << std::endl;
+  std::cout << "            Plane Model Segmentation             " << std::endl;
+  std::cout << " ================================================" << std::endl;
+  std::cout << " find a plane that covers the most points in the data" << std::endl;
+
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered (new pcl::PointCloud<pcl::PointXYZ>);
 
@@ -67,6 +72,12 @@ int main()
               << cloud_filtered->points[i].y << ", "
               << cloud_filtered->points[i].z << std::endl;
   }
+  std::cout << std::endl;
+  std::cout << "coefficients for the plane" << std::endl;
+  std::cout << " x = " << coefficients->values[0] << std::endl;
+  std::cout << " y = " << coefficients->values[1] << std::endl;
+  std::cout << " z = " << coefficients->values[2] << std::endl;
+  std::cout << " d = " << coefficients->values[3] << std::endl;
 
   return (0);
 }

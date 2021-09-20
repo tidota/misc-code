@@ -26,3 +26,34 @@ sudo apt install libpcl-dev
   Sample code to use PCL.
 
 - [Using a matrix to transform a point cloud](http://pointclouds.org/documentation/tutorials/matrix_transform.php#matrix-transform)
+
+
+# list of code
+
+- pcl_prac.cpp
+
+   - Passthrough
+   - Projection (to a plane)
+
+- pcl_prac2.cpp
+
+   - Statistical Outlier Removal (to remove noisy data)
+
+      need to download the dataset
+      ```
+      wget https://raw.github.com/PointCloudLibrary/data/master/tutorials/table_scene_lms400.pcd
+      ```
+
+- pcl_prac3.cpp
+
+   - Iterative Closest Point (ICP)
+
+      Note: it is used for registration
+
+- pcl_prac4.cpp
+
+   - Plane Model Segmentation (to find a plane)
+
+- pcd_write.cpp
+
+   - Saving data into a file
