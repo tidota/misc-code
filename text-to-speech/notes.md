@@ -64,6 +64,10 @@ Generate a sample file.
 echo 今日の天気は晴れです。 | open_jtalk -x /var/lib/mecab/dic/open-jtalk/naist-jdic -m /usr/share/hts-voice/mei/mei_normal.htsvoice  -ow ~/open_jtalk.wav
 ```
 
+Just play in the terminal
+```
+echo こんにちは | open_jtalk -m /usr/share/hts-voice/mei/mei_normal.htsvoice -x /var/lib/mecab/dic/open-jtalk/naist-jdic -ow /dev/stdout | aplay
+```
 
 Script to do the same thing:
 ```
