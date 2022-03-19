@@ -1,5 +1,25 @@
 # Turtlebot3 on Noetic
 
+# Setup
+
+## Real World
+
+Refer to https://emanual.robotis.com/docs/en/platform/turtlebot3/quick-start/
+
+In `~/.bashrc`
+```
+DEV_NAME=<device name>
+export ROS_MASTER_URI=http://`ip addr show dev $DEV_NAME | grep 'inet ' | awk '{print $2}' | cut -d'/' -f1 -`:11311
+export ROS_HOSTNAME=`ip addr show dev $DEV_NAME | grep 'inet ' | awk '{print $2}' | cut -d'/' -f1 -`
+```
+
+After downloading the image for Raspberry PI 3B+, check the file
+```
+echo "a7c57e20f2ee4204c95315866f4a274886094f7c63ed390b6d06d95074830309 *tb3_rpi3b+_noetic_20210708.zip" | shasum -a 256 --check
+```
+
+## Simulation
+
 Check this as reference: https://github.com/HotBlackRobotics/hotblackrobotics.github.io/blob/master/en/blog/_posts/2018-01-29-seq-goals-py.md
 
 Assuming ROS noetic and Gazebo have been installed.
