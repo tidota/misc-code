@@ -15,7 +15,9 @@ In `~/.bashrc`
 DEV_NAME=<device name>
 export ROS_MASTER_URI=http://`ip addr show dev $DEV_NAME | grep 'inet ' | awk '{print $2}' | cut -d'/' -f1 -`:11311
 export ROS_HOSTNAME=`ip addr show dev $DEV_NAME | grep 'inet ' | awk '{print $2}' | cut -d'/' -f1 -`
+export TURTLEBOT3_MODEL=burger
 ```
+In case of waffle, `export TURTLEBOT3_MODEL=waffle`.
 
 ### Turtlebot3
 
@@ -99,6 +101,24 @@ ssh ubuntu@<IP address>
 ```
 
 Then, just move back to the e-manual.
+
+### Quickstart after Setup
+
+On the laptop PC,
+```
+roscore
+```
+```
+roslaunch turtlebot3_bringup turtlebot3_remote.launch
+```
+```
+rosrun rviz rviz -d `rospack find turtlebot3_description`/rviz/model.rviz
+```
+
+On Turtlebot3,
+```
+roslaunch turtlebot3_bringup turtlebot3_robot.launch
+```
 
 ## Simulation
 
