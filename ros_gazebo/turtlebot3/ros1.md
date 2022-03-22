@@ -260,3 +260,13 @@ Start navigation
 ```
 roslaunch explore_lite explore.launch
 ```
+
+------------------------------------------------------------------------------------
+
+# Real world vs Simulation
+
+Real world:
+![](./img/turtlebot3_real.png)
+
+Simulation:
+![](./img/turtlebot3_sim.png)
