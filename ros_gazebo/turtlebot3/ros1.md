@@ -108,6 +108,13 @@ On the laptop PC,
 ```
 roscore
 ```
+
+On Turtlebot3,
+```
+roslaunch turtlebot3_bringup turtlebot3_robot.launch
+```
+
+On the laptop PC,
 ```
 roslaunch turtlebot3_bringup turtlebot3_remote.launch
 ```
@@ -115,9 +122,46 @@ roslaunch turtlebot3_bringup turtlebot3_remote.launch
 rosrun rviz rviz -d `rospack find turtlebot3_description`/rviz/model.rviz
 ```
 
+### Quickstart of Mapping
+
+On the laptop PC,
+```
+roscore
+```
+
 On Turtlebot3,
 ```
 roslaunch turtlebot3_bringup turtlebot3_robot.launch
+```
+
+On the laptop PC,
+```
+roslaunch turtlebot3_slam turtlebot3_slam.launch
+```
+```
+roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
+```
+
+To save the map,
+```
+rosrun map_server map_saver -f ~/map
+```
+
+### Quickstart of Navigation
+
+On the laptop PC,
+```
+roscore
+```
+
+On Turtlebot3,
+```
+roslaunch turtlebot3_bringup turtlebot3_robot.launch
+```
+
+On the laptop PC,
+```
+roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/map.yaml
 ```
 
 ## Simulation
