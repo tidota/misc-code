@@ -1,14 +1,12 @@
 # Turtlebot3 on Noetic
 
-# Setup
-
-## Real World
+# Setup (Real World)
 
 Refer to their e-manual https://emanual.robotis.com/docs/en/platform/turtlebot3/quick-start/
 
 The following items are just my personal notes.
 
-### Laptop PC
+## Laptop PC
 
 In `~/.bashrc`
 ```
@@ -19,7 +17,7 @@ export TURTLEBOT3_MODEL=burger
 ```
 In case of waffle, `export TURTLEBOT3_MODEL=waffle`.
 
-### Turtlebot3
+## Turtlebot3
 
 Download the disk image.
 After downloading the image for Raspberry PI 3B+, check the file
@@ -48,7 +46,7 @@ Physical setup:
 
 Then, turn on the switch on the OpenCR.
 
-#### Replacing networkd
+### Replacing networkd
 
 Somehow, `networkd` did not work. (it may be a specific issue for Ubuntu 20.04?)
 Instead, the network manager, which is for Ubuntu Desktop, worked.
@@ -87,7 +85,7 @@ Run `ip addr`. If it shows its IP address for wlan0, the network is correctly se
 
 Then, shutdown Turtlebot3. Disconnect the HDMI cable and the USB keyboard. They are not necessary as Turtlebot3 can be now accessible through SSH.
 
-### SSH connection
+## SSH connection
 
 Assuming Turtlebot3 is accessing the wifi access point on the laptop PC.
 
@@ -102,7 +100,7 @@ ssh ubuntu@<IP address>
 
 Then, just move back to the e-manual.
 
-### Quickstart after Setup
+# Quickstart after Setup
 
 On the laptop PC,
 ```
@@ -122,7 +120,7 @@ roslaunch turtlebot3_bringup turtlebot3_remote.launch
 rosrun rviz rviz -d `rospack find turtlebot3_description`/rviz/model.rviz
 ```
 
-### Quickstart of Mapping
+# Quickstart of Mapping
 
 On the laptop PC,
 ```
@@ -147,7 +145,7 @@ To save the map,
 rosrun map_server map_saver -f ~/map
 ```
 
-### Quickstart of Navigation
+# Quickstart of Navigation
 
 On the laptop PC,
 ```
@@ -164,7 +162,9 @@ On the laptop PC,
 roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/map.yaml
 ```
 
-## Simulation
+---------------------------------------------------------------------------------------------
+
+# Setup (Simulation)
 
 Check this as reference: https://github.com/HotBlackRobotics/hotblackrobotics.github.io/blob/master/en/blog/_posts/2018-01-29-seq-goals-py.md
 
