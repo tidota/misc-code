@@ -162,6 +162,20 @@ On the laptop PC,
 roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/map.yaml
 ```
 
+## move_base does not publish cost maps?
+
+Is it because of "Costmap2DROS transform timeout."?
+
+Seems like Turtlebot3's clock is not synchronized.
+https://github.com/ROBOTIS-GIT/turtlebot3/issues/78
+https://askubuntu.com/questions/429306/ntpdate-no-server-suitable-for-synchronization-found
+
+On both sides,
+```
+sudo apt-get install htpdate
+sudo htpdate -a google.com
+```
+
 ---------------------------------------------------------------------------------------------
 
 # Setup (Simulation)
