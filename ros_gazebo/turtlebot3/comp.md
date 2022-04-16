@@ -4,148 +4,123 @@ This page compares ROS1 and ROS2 features by comparing files for [my Turtlebot3 
 
 # CMakeLists.txt
 
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index aab575c..51e29e0 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -1,60 +1,27 @@
--cmake_minimum_required(VERSION 3.5)
-+cmake_minimum_required(VERSION 2.8.3)
- project(turtlebot3_wallfollower)
+## catkin (ROS1) vs ament_cmake (ROS2)
 
--# Default to C99
--if(NOT CMAKE_C_STANDARD)
--  set(CMAKE_C_STANDARD 99)
--endif()
-+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra")
-+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter")
-+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-maybe-uninitialized")
-+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -DNDEBUG")
+ROS1
+```
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  rospy
+  std_msgs
+  geometry_msgs
+  sensor_msgs
+  std_srvs
+)
+catkin_package()
 
--# Default to C++14
--if(NOT CMAKE_CXX_STANDARD)
--  set(CMAKE_CXX_STANDARD 14)
--endif()
-+find_package(catkin REQUIRED COMPONENTS
-+  roscpp
-+  rospy
-+  std_msgs
+include_directories(
+  include
+  ${catkin_INCLUDE_DIRS}
+)
+```
 
--if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
--  add_compile_options(-Wall -Wextra -Wpedantic)
--endif()
--
--# find dependencies
--find_package(ament_cmake REQUIRED)
--# uncomment the following section in order to fill in
--# further dependencies manually.
--# find_package(<dependency> REQUIRED)
-+  geometry_msgs
-+  sensor_msgs
-+  std_srvs
-+)
+ROS2
+```
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 
--find_package(rclcpp REQUIRED)
--find_package(geometry_msgs REQUIRED)
--# find_package(std_msgs REQUIRED)
--find_package(sensor_msgs REQUIRED)
--find_package(std_srvs REQUIRED)
-+catkin_package()
+include_directories(
+  include
+)
+```
 
--# add the include directory
- include_directories(
-   include
-+  ${catkin_INCLUDE_DIRS}
- )
+## add_executable (common)
+```
+add_executable(wallfollower src/main.cpp src/wallfollower.cpp)
+```
 
- add_executable(wallfollower src/main.cpp src/wallfollower.cpp)
--ament_target_dependencies(
--  wallfollower
--  rclcpp geometry_msgs sensor_msgs std_srvs)
--install(TARGETS
--  wallfollower
--  DESTINATION lib/${PROJECT_NAME})
--
--if(BUILD_TESTING)
--  find_package(ament_lint_auto REQUIRED)
--  # the following line skips the linter which checks for copyrights
--  # uncomment the line when a copyright and license is not present in all source files
--  #set(ament_cmake_copyright_FOUND TRUE)
--  # the following line skips cpplint (only works in a git repo)
--  # uncomment the line when this package is not in a git repo
--  #set(ament_cmake_cpplint_FOUND TRUE)
--  ament_lint_auto_find_test_dependencies()
--endif()
--
--install(DIRECTORY
--  launch
--  rviz
--  DESTINATION share/${PROJECT_NAME}/
--)
--
--ament_package()
-+target_link_libraries(wallfollower ${catkin_LIBRARIES})
+## target_link_libraries (ROS1) vs ament_target_dependencies (ROS2)
+
+ROS1
+```
+target_link_libraries(wallfollower ${catkin_LIBRARIES})
+```
+
+ROS2
+```
+ament_target_dependencies(
+  wallfollower
+  rclcpp geometry_msgs sensor_msgs std_srvs)
+
+install(TARGETS
+  wallfollower
+  DESTINATION lib/${PROJECT_NAME})
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+install(DIRECTORY
+  launch
+  rviz
+  DESTINATION share/${PROJECT_NAME}/
+)
+
+ament_package()
+```
 
 ---------------------------------------------------------------------------------------
 
 # package.xml
 
-diff --git a/package.xml b/package.xml
-index ac1a2ee..1d315b9 100644
---- a/package.xml
-+++ b/package.xml
-@@ -1,23 +1,32 @@
- <?xml version="1.0"?>
--<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
--<package format="3">
-+<package>
-   <name>turtlebot3_wallfollower</name>
-   <version>0.1.0</version>
-   <description>Wall-following controller</description>
-   <maintainer email="tidota@hawaii.edu">Tetsuya Idota</maintainer>
--  <license>Apache License 2.0</license>
+## buildtool_depend
 
--  <buildtool_depend>ament_cmake</buildtool_depend>
--  <depend>rclcpp</depend>
--  <depend>geometry_msgs</depend>
--  <!--<depend>std_msgs</depend>-->
--  <depend>sensor_msgs</depend>
--  <depend>std_srvs</depend>
-+  <!-- One maintainer tag required, multiple allowed, one person per tag -->
-+  <!-- Example:  -->
-+  <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-+  <maintainer email="tidota@hawaii.edu">Tetsuya Idota</maintainer>
-+
-+
-+  <!-- One license tag required, multiple allowed, one license per tag -->
-+  <!-- Commonly used license strings: -->
-+  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
-+  <license>BSD</license>
-+
-+  <buildtool_depend>catkin</buildtool_depend>
+ROS1
+```
+  <buildtool_depend>catkin</buildtool_depend>
+```
+ROS2
+```
+  <buildtool_depend>ament_cmake</buildtool_depend>
+```
 
--  <test_depend>ament_lint_auto</test_depend>
--  <test_depend>ament_lint_common</test_depend>
-+  <build_depend>roscpp</build_depend>
-+  <build_depend>rospy</build_depend>
-+  <build_depend>std_msgs</build_depend>
-+  <build_depend>geometry_msgs</build_depend>
-+  <build_depend>sensor_msgs</build_depend>
+## dependencies
 
--  <export>
--    <build_type>ament_cmake</build_type>
--  </export>
-+  <run_depend>roscpp</run_depend>
-+  <run_depend>rospy</run_depend>
-+  <run_depend>std_msgs</run_depend>
-+  <run_depend>geometry_msgs</run_depend>
-+  <run_depend>sensor_msgs</run_depend>
- </package>
+ROS1
+```
+  <build_depend>roscpp</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+```
+ROS2
+```
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>std_srvs</depend>
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+```
 
 ----------------------------------------------------------------
 
 # include/turtlebot3_wallfollower/wallfollower.hpp
 
+```
 diff --git a/include/turtlebot3_wallfollower/wallfollower.hpp b/include/turtlebot3_wallfollower/wallfollower.hpp
 index 118110c..57073a3 100644
 --- a/include/turtlebot3_wallfollower/wallfollower.hpp
@@ -200,11 +175,13 @@ index 118110c..57073a3 100644
 -  private: sensor_msgs::msg::LaserScan scan_msg_buff_;
 +  private: sensor_msgs::LaserScan scan_msg_buff_;
  };
+```
 
 -----------------------------------------------------------------
 
 # src/wallfollower.cpp
 
+```
 diff --git a/src/wallfollower.cpp b/src/wallfollower.cpp
 index 423b371..8716a57 100644
 --- a/src/wallfollower.cpp
@@ -334,11 +311,13 @@ index 423b371..8716a57 100644
    }
 +  return true;
  }
+```
 
 ---------------------------------------------------
 
 # src/main.cpp
 
+```
 diff --git a/src/main.cpp b/src/main.cpp
 index eb0817d..bc2cdd6 100644
 --- a/src/main.cpp
@@ -362,11 +341,13 @@ index eb0817d..bc2cdd6 100644
 +  ros::spin();
    return 0;
  }
+```
 
 -------------------------------------------------------
 
 # launch/start_real.launch
 
+```
 diff --git a/launch/start_real.launch b/launch/start_real.launch
 new file mode 100644
 index 0000000..95437cd
@@ -386,11 +367,13 @@ index 0000000..95437cd
 +  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="$(arg output)"/>
 +  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" output="$(arg output)"/>
 +</launch>
+```
 
 --------------------------------------------------------------
 
 # launch/start_sim.launch
 
+```
 diff --git a/launch/start_sim.launch b/launch/start_sim.launch
 new file mode 100644
 index 0000000..f43d616
@@ -410,3 +393,4 @@ index 0000000..f43d616
 +  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="$(arg output)"/>
 +  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" output="$(arg output)"/>
 +</launch>
+```
