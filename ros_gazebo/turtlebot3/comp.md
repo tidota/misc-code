@@ -49,7 +49,7 @@ ROS1
 target_link_libraries(wallfollower ${catkin_LIBRARIES})
 ```
 
-ROS2
+ROS2 (the install and test parts may not be really necessary?)
 ```
 ament_target_dependencies(
   wallfollower
@@ -120,227 +120,335 @@ ROS2
 
 # include/turtlebot3_wallfollower/wallfollower.hpp
 
+## Include Directives
+
+ROS1
 ```
-diff --git a/include/turtlebot3_wallfollower/wallfollower.hpp b/include/turtlebot3_wallfollower/wallfollower.hpp
-index 118110c..57073a3 100644
---- a/include/turtlebot3_wallfollower/wallfollower.hpp
-+++ b/include/turtlebot3_wallfollower/wallfollower.hpp
-@@ -2,32 +2,34 @@
+#include <mutex>
 
- #include <mutex>
+#include <ros/ros.h>
 
--#include <rclcpp/rclcpp.hpp>
--#include <geometry_msgs/msg/twist.hpp>
--#include <sensor_msgs/msg/laser_scan.hpp>
--#include <std_srvs/srv/set_bool.hpp>
-+#include <ros/ros.h>
+#include <geometry_msgs/Twist.h>
+#include <sensor_msgs/LaserScan.h>
+#include <std_srvs/SetBool.h>
+```
 
--class Wallfollower : public rclcpp::Node
-+#include <geometry_msgs/Twist.h>
-+#include <sensor_msgs/LaserScan.h>
-+#include <std_srvs/SetBool.h>
-+
-+class Wallfollower
- {
-   public: Wallfollower();
-   private: void topic_callback(
--                  const sensor_msgs::msg::LaserScan::SharedPtr msg);
--  private: void timer_callback();
--  private: void set_running(
--    const std::shared_ptr<std_srvs::srv::SetBool::Request> request,
--          std::shared_ptr<std_srvs::srv::SetBool::Response> response);
-+                  const sensor_msgs::LaserScan::ConstPtr& msg);
-+  private: void timer_callback(const ros::TimerEvent& event);
-+  private: bool set_running(
-+    std_srvs::SetBool::Request& request, std_srvs::SetBool::Response& response);
-+
-+  private: ros::NodeHandle nh;
+ROS2
+```
+#include <mutex>
 
-   private:
--    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_;
-+    ros::Publisher publisher_;
-   private:
--    rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr subscription_;
-+    ros::Subscriber subscription_;
-   private:
--    rclcpp::TimerBase::SharedPtr timer_;
-+    ros::Timer timer_;
-   private:
--    rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr service_;
-+    ros::ServiceServer service_;
+#include <rclcpp/rclcpp.hpp>
 
-   private: bool running_;
+#include <geometry_msgs/msg/twist.hpp>
+#include <sensor_msgs/msg/laser_scan.hpp>
+#include <std_srvs/srv/set_bool.hpp>
+```
 
-   private: std::mutex scan_mutex_;
--  private: sensor_msgs::msg::LaserScan scan_msg_buff_;
-+  private: sensor_msgs::LaserScan scan_msg_buff_;
- };
+## Definition of the Class
+
+ROS1
+```
+class Wallfollower
+{
+  public: Wallfollower();
+
+  private: void topic_callback(const sensor_msgs::LaserScan::ConstPtr& msg);
+  private: void timer_callback(const ros::TimerEvent& event);
+  private: bool set_running(
+    std_srvs::SetBool::Request& request,
+    std_srvs::SetBool::Response& response);
+
+  private: ros::NodeHandle nh;
+
+  private: ros::Publisher publisher_;
+  private: ros::Subscriber subscription_;
+  private: ros::Timer timer_;
+  private: ros::ServiceServer service_;
+  private: sensor_msgs::LaserScan scan_msg_buff_;
+
+  private: bool running_;
+  private: std::mutex scan_mutex_;
+};
+```
+
+ROS2
+```
+class Wallfollower : public rclcpp::Node
+{
+  public: Wallfollower();
+
+  private: void topic_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg);
+  private: void timer_callback();
+  private: void set_running(
+    const std::shared_ptr<std_srvs::srv::SetBool::Request> request,
+          std::shared_ptr<std_srvs::srv::SetBool::Response> response);
+
+  private: rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_;
+  private: rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr subscription_;
+  private: rclcpp::TimerBase::SharedPtr timer_;
+  private: rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr service_;
+  private: sensor_msgs::msg::LaserScan scan_msg_buff_;
+
+  private: bool running_;
+  private: std::mutex scan_mutex_;
+};
 ```
 
 -----------------------------------------------------------------
 
 # src/wallfollower.cpp
 
+## Include Directives
+
+ROS1
 ```
-diff --git a/src/wallfollower.cpp b/src/wallfollower.cpp
-index 423b371..8716a57 100644
---- a/src/wallfollower.cpp
-+++ b/src/wallfollower.cpp
-@@ -3,64 +3,55 @@
- // the code was made by combining the two pieces of the sample code from
- // https://docs.ros.org/en/foxy/Tutorials/Writing-A-Simple-Cpp-Publisher-And-Subscriber.html
+#include <memory>
+#include <mutex>
+#include <string>
 
--#include <chrono>
--#include <functional>
- #include <memory>
- #include <mutex>
- #include <string>
+#include <ros/ros.h>
 
--#include <rclcpp/rclcpp.hpp>
--#include <geometry_msgs/msg/twist.hpp>
--#include <sensor_msgs/msg/laser_scan.hpp>
--#include <std_srvs/srv/set_bool.hpp>
-+#include <ros/ros.h>
+#include <geometry_msgs/Twist.h>
+#include <sensor_msgs/LaserScan.h>
+#include <std_srvs/SetBool.h>
 
--#include "turtlebot3_wallfollower/wallfollower.hpp"
--
--using namespace std::chrono_literals;
-+#include <geometry_msgs/Twist.h>
-+#include <sensor_msgs/LaserScan.h>
-+#include <std_srvs/SetBool.h>
+#include "turtlebot3_wallfollower/wallfollower.hpp"
+```
 
--using std::placeholders::_1;
--using std::placeholders::_2;
-+#include "turtlebot3_wallfollower/wallfollower.hpp"
+ROS2
+```
+#include <chrono>
+#include <functional>
+#include <memory>
+#include <mutex>
+#include <string>
 
- ////////////////////////////////////////////////////////////////////////////////
--Wallfollower::Wallfollower(): Node("wallfollower"), running_(false)
-+Wallfollower::Wallfollower(): running_(false)
- {
-   // Subscribe the topic for proximity data
-   subscription_
--    = this->create_subscription<sensor_msgs::msg::LaserScan>(
--      "scan", rclcpp::SensorDataQoS(),
--      std::bind(&Wallfollower::topic_callback, this, _1));
-+    = this->nh.subscribe("scan", 1000, &Wallfollower::topic_callback, this);
+#include <rclcpp/rclcpp.hpp>
 
-   // Make a publisher for controll
-   publisher_
--    = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
-+    = this->nh.advertise<geometry_msgs::Twist>("cmd_vel", 10);
+#include <geometry_msgs/msg/twist.hpp>
+#include <sensor_msgs/msg/laser_scan.hpp>
+#include <std_srvs/srv/set_bool.hpp>
 
-   // Make a timer to give a command at a specific interval.
-   timer_
--    = this->create_wall_timer(
--      500ms, std::bind(&Wallfollower::timer_callback, this));
-+    = this->nh.createTimer(
-+        ros::Duration(0.5), &Wallfollower::timer_callback, this);
+#include "turtlebot3_wallfollower/wallfollower.hpp"
 
-   // Make a service to receive a command.
-   service_
--    = this->create_service<std_srvs::srv::SetBool>(
--      "set_running", std::bind(&Wallfollower::set_running, this, _1, _2));
-+    = this->nh.advertiseService(
-+        "set_running", &Wallfollower::set_running, this);
- }
+using namespace std::chrono_literals;
+using std::placeholders::_1;
+using std::placeholders::_2;
+```
 
- ////////////////////////////////////////////////////////////////////////////////
--void Wallfollower::topic_callback(
--  const sensor_msgs::msg::LaserScan::SharedPtr msg)
-+void Wallfollower::topic_callback(const sensor_msgs::LaserScan::ConstPtr& msg)
- {
-   std::lock_guard<std::mutex> lk(scan_mutex_);
-   scan_msg_buff_ = *msg;
- }
+## Constructor
 
- ////////////////////////////////////////////////////////////////////////////////
--void Wallfollower::timer_callback()
-+void Wallfollower::timer_callback(const ros::TimerEvent& event)
- {
--  auto message = geometry_msgs::msg::Twist();
-+  auto message = geometry_msgs::Twist();
+ROS1
+```
+Wallfollower::Wallfollower(): running_(false)
+{
+  // Subscribe the topic for proximity data
+  subscription_
+    = this->nh.subscribe("scan", 1000, &Wallfollower::topic_callback, this);
 
-   if (this->running_)
-   {
--    sensor_msgs::msg::LaserScan msg;
-+    sensor_msgs::LaserScan msg;
-     {
-       std::lock_guard<std::mutex> lk(scan_mutex_);
-       msg = scan_msg_buff_;
-@@ -75,7 +66,7 @@ void Wallfollower::timer_callback()
+  // Make a publisher for controll
+  publisher_
+    = this->nh.advertise<geometry_msgs::Twist>("cmd_vel", 10);
 
-     if (N == 0)
-     {
--      RCLCPP_ERROR(this->get_logger(), "Empty scan data!");
-+      ROS_ERROR_STREAM("Empty scan data!");
-     }
-     else
-     {
-@@ -143,24 +134,24 @@ void Wallfollower::timer_callback()
-     }
-   }
+  // Make a timer to give a command at a specific interval.
+  timer_
+    = this->nh.createTimer(ros::Duration(0.5), &Wallfollower::timer_callback, this);
 
--  publisher_->publish(message);
-+  publisher_.publish(message);
- }
+  // Make a service to receive a command.
+  service_
+     = this->nh.advertiseService("set_running", &Wallfollower::set_running, this);
+}
+```
 
- ////////////////////////////////////////////////////////////////////////////////
--void Wallfollower::set_running(
--  const std::shared_ptr<std_srvs::srv::SetBool::Request> request,
--        std::shared_ptr<std_srvs::srv::SetBool::Response> response)
-+bool Wallfollower::set_running(
-+  std_srvs::SetBool::Request& request, std_srvs::SetBool::Response& response)
- {
--  this->running_ = request->data;
--  response->success = true;
-+  this->running_ = request.data;
-+  response.success = true;
-   if (this->running_)
-   {
--    RCLCPP_INFO(this->get_logger(), "Got a command to run.");
--    response->message = "Run.";
-+    ROS_INFO_STREAM("Got a command to run.");
-+    response.message = "Run.";
-   }
-   else
-   {
--    RCLCPP_INFO(this->get_logger(), "Got a command to stop.");
--    response->message = "Stop.";
-+    ROS_INFO_STREAM("Got a command to stop.");
-+    response.message = "Stop.";
-   }
-+  return true;
- }
+ROS2
+```
+Wallfollower::Wallfollower(): Node("wallfollower"), running_(false)
+{
+  // Subscribe the topic for proximity data
+  subscription_
+    = this->create_subscription<sensor_msgs::msg::LaserScan>(
+      "scan", rclcpp::SensorDataQoS(),
+      std::bind(&Wallfollower::topic_callback, this, _1));
+
+  // Make a publisher for controll
+  publisher_
+    = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
+
+  // Make a timer to give a command at a specific interval.
+  timer_
+    = this->nh.createTimer(ros::Duration(0.5), &Wallfollower::timer_callback, this);
+
+  // Make a service to receive a command.
+  service_
+    = this->create_service<std_srvs::srv::SetBool>(
+        "set_running", std::bind(&Wallfollower::set_running, this, _1, _2));
+}
+```
+
+## Subscriber Callback
+
+ROS1
+```
+void Wallfollower::topic_callback(const sensor_msgs::LaserScan::ConstPtr& msg)
+{
+  std::lock_guard<std::mutex> lk(scan_mutex_);
+  scan_msg_buff_ = *msg;
+}
+```
+
+ROS2
+```
+void Wallfollower::topic_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg)
+{
+  std::lock_guard<std::mutex> lk(scan_mutex_);
+  scan_msg_buff_ = *msg;
+}
+```
+
+## Timer Callback
+
+ROS1
+```
+void Wallfollower::timer_callback(const ros::TimerEvent& event)
+{
+  auto message = geometry_msgs::Twist();
+  if (this->running_)
+  {
+    sensor_msgs::LaserScan msg;
+
+    ...
+
+    if (N == 0)
+    {
+      ROS_ERROR_STREAM("Empty scan data!");
+    }
+
+    ...
+
+  }
+
+  publisher_.publish(message);
+}
+```
+ROS2
+```
+void Wallfollower::timer_callback()
+{
+  auto message = geometry_msgs::msg::Twist();
+  if (this->running_)
+  {
+    sensor_msgs::msg::LaserScan msg;
+
+    ...
+
+    if (N == 0)
+    {
+      RCLCPP_ERROR(this->get_logger(), "Empty scan data!");
+    }
+
+    ...
+
+  }
+
+  publisher_->publish(message);
+}
+```
+
+## Service Callback
+
+ROS1
+```
+bool Wallfollower::set_running(
+  std_srvs::SetBool::Request& request, std_srvs::SetBool::Response& response)
+{
+  this->running_ = request.data;
+  response.success = true;
+  if (this->running_)
+  {
+    ROS_INFO_STREAM("Got a command to run.");
+    response.message = "Run.";
+  }
+  else
+  {
+    ROS_INFO_STREAM("Got a command to stop.");
+    response.message = "Stop.";
+  }
+
+  return true;
+}
+```
+
+ROS2
+```
+void Wallfollower::set_running(
+  const std::shared_ptr<std_srvs::srv::SetBool::Request> request,
+        std::shared_ptr<std_srvs::srv::SetBool::Response> response)
+{
+  this->running_ = request->data;
+  response->success = true;
+  if (this->running_)
+  {
+    RCLCPP_INFO(this->get_logger(), "Got a command to run.");
+    response->message = "Run.";
+  }
+  else
+  {
+    RCLCPP_INFO(this->get_logger(), "Got a command to stop.");
+    response->message = "Stop.";
+  }
+
+  return true;
+}
 ```
 
 ---------------------------------------------------
 
 # src/main.cpp
 
+## Include Directives
+
+ROS1
 ```
-diff --git a/src/main.cpp b/src/main.cpp
-index eb0817d..bc2cdd6 100644
---- a/src/main.cpp
-+++ b/src/main.cpp
-@@ -1,14 +1,14 @@
- // main.cpp
+#include <memory>
 
- #include <memory>
--#include <rclcpp/rclcpp.hpp>
-+#include <ros/ros.h>
- #include "turtlebot3_wallfollower/wallfollower.hpp"
+#include <ros/ros.h>
 
- ////////////////////////////////////////////////////////////////////////////////
- int main(int argc, char * argv[])
- {
--  rclcpp::init(argc, argv);
--  rclcpp::spin(std::make_shared<Wallfollower>());
--  rclcpp::shutdown();
-+  ros::init(argc, argv, "wallfollower");
-+  Wallfollower wallfollower;
-+  ros::spin();
-   return 0;
- }
+#include "turtlebot3_wallfollower/wallfollower.hpp"
+```
+
+ROS2
+```
+#include <memory>
+
+#include <rclcpp/rclcpp.hpp>
+
+#include "turtlebot3_wallfollower/wallfollower.hpp"
+```
+
+## Main
+
+ROS1
+```
+int main(int argc, char * argv[])
+{
+  ros::init(argc, argv, "wallfollower");
+  Wallfollower wallfollower;
+  ros::spin();
+
+  return 0;
+}
+```
+
+ROS2
+```
+int main(int argc, char * argv[])
+{
+  rclcpp::init(argc, argv);
+  rclcpp::spin(std::make_shared<Wallfollower>());
+  rclcpp::shutdown();
+
+  return 0;
+}
 ```
 
 -------------------------------------------------------
