@@ -455,50 +455,125 @@ int main(int argc, char * argv[])
 
 # launch/start_real.launch
 
+ROS1
 ```
-diff --git a/launch/start_real.launch b/launch/start_real.launch
-new file mode 100644
-index 0000000..95437cd
---- /dev/null
-+++ b/launch/start_real.launch
-@@ -0,0 +1,13 @@
-+<?xml version="1.0"?>
-+<launch>
-+  <arg name="output" default="screen"/>
-+  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
-+
-+  <node pkg="turtlebot3_wallfollower" type="wallfollower" name="wallfollower" output="$(arg output)" />
-+
-+  <node pkg="rviz" type="rviz" name="rviz" output="screen" args="-d $(find turtlebot3_wallfollower)/rviz/default_view.rviz" />
-+
-+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
-+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="$(arg output)"/>
-+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" output="$(arg output)"/>
-+</launch>
+<?xml version="1.0"?>
+<launch>
+  <arg name="output" default="screen"/>
+  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+
+  <node pkg="turtlebot3_wallfollower" type="wallfollower" name="wallfollower" output="$(arg output)" />
+
+  <node pkg="rviz" type="rviz" name="rviz" output="screen" args="-d $(find turtlebot3_wallfollower)/rviz/default_view.rviz" />
+
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="$(arg output)"/>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" output="$(arg output)"/>
+</launch>
+```
+
+ROS2
+```
+#!/usr/bin/env python3
+
+import os
+
+from ament_index_python.packages import get_package_share_directory
+
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    rviz_config_dir = os.path.join(
+            get_package_share_directory('turtlebot3_wallfollower'),
+            'rviz',
+            'default_view.rviz')
+
+    return LaunchDescription([
+        Node(
+            package='turtlebot3_wallfollower',
+            executable='wallfollower',
+            name='wallfollower',
+            output='screen'
+        ),
+        Node(
+            package='rviz2',
+            executable='rviz2',
+            name='rviz2',
+            arguments=['-d', rviz_config_dir],
+            output='screen'
+        ),
+    ])
 ```
 
 --------------------------------------------------------------
 
 # launch/start_sim.launch
 
+ROS1
 ```
-diff --git a/launch/start_sim.launch b/launch/start_sim.launch
-new file mode 100644
-index 0000000..f43d616
---- /dev/null
-+++ b/launch/start_sim.launch
-@@ -0,0 +1,13 @@
-+<?xml version="1.0"?>
-+<launch>
-+  <arg name="output" default="screen"/>
-+
-+  <include file="$(find turtlebot3_gazebo)/launch/turtlebot3_house.launch" />
-+
-+  <node pkg="turtlebot3_wallfollower" type="wallfollower" name="wallfollower" output="$(arg output)" />
-+
-+  <node pkg="rviz" type="rviz" name="rviz" output="screen" args="-d $(find turtlebot3_wallfollower)/rviz/default_view.rviz" />
-+
-+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="$(arg output)"/>
-+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" output="$(arg output)"/>
-+</launch>
+<?xml version="1.0"?>
+<launch>
+  <arg name="output" default="screen"/>
+
+  <include file="$(find turtlebot3_gazebo)/launch/turtlebot3_house.launch" />
+
+  <node pkg="turtlebot3_wallfollower" type="wallfollower" name="wallfollower" output="$(arg output)" />
+
+  <node pkg="rviz" type="rviz" name="rviz" output="screen" args="-d $(find turtlebot3_wallfollower)/rviz/default_view.rviz" />
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="$(arg output)"/>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" output="$(arg output)"/>
+</launch>
+```
+
+ROS2
+```
+#!/usr/bin/env python3
+
+import os
+
+from ament_index_python.packages import get_package_share_directory
+
+from launch.substitutions import LaunchConfiguration
+
+from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
+
+    pkg_turtlebot3_gazebo = get_package_share_directory('turtlebot3_gazebo')
+
+    rviz_config_dir = os.path.join(
+            get_package_share_directory('turtlebot3_wallfollower'),
+            'rviz',
+            'default_view.rviz')
+
+    return LaunchDescription([
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                os.path.join(pkg_turtlebot3_gazebo, \
+                             'launch', 'turtlebot3_house.launch.py')
+            ),
+            launch_arguments={'use_sim_time': use_sim_time}.items(),
+        ),
+        Node(
+            package='turtlebot3_wallfollower',
+            executable='wallfollower',
+            name='wallfollower',
+            parameters=[{'use_sim_time': use_sim_time}],
+            output='screen'
+        ),
+        Node(
+            package='rviz2',
+            executable='rviz2',
+            name='rviz2',
+            arguments=['-d', rviz_config_dir],
+            parameters=[{'use_sim_time': use_sim_time}],
+            output='screen'
+        ),
+    ])
 ```
