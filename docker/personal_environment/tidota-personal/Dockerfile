@@ -61,6 +61,47 @@ RUN sudo apt-get install -y libgtest-dev cmake \
 RUN sudo apt-get install -y openjdk-8-jdk \
  && sudo apt-get clean
 
+# Japanese
+RUN sudo apt-get update \
+ && sudo apt-get install -y locales
+RUN sudo apt-get install -y fcitx-mozc mozc-utils-gui fonts-noto-cjk language-pack-ja-base language-pack-ja
+#RUN sudo apt-get install -y fcitx-mozc mozc-utils-gui fonts-noto-cjk language-pack-ja-base language-pack-ja dbus-x11
+
+# misc
+RUN sudo apt-get update \
+ && sudo apt-get install -y ranger \
+                            gedit \
+ && sudo apt-get clean
+
+RUN echo "set expandtab"     > /home/$USERNAME/.vimrc \
+ && echo "set tabstop=2"    >> /home/$USERNAME/.vimrc \
+ && echo "set shiftwidth=2" >> /home/$USERNAME/.vimrc
+
+
+# Setup locale
+RUN sudo localedef -f UTF-8 -i ja_JP ja_JP.utf8
+RUN im-config -n fcitx
+#RUN echo "ibus-daemon -d" >> /home/$USERNAME/.bashrc
+RUN echo "fcitx-autostart < /dev/null 2> /dev/null > /dev/null &" >> /home/$USERNAME/.bashrc
+#ENV GTK_IM_MODULE=xim
+ENV GTK_IM_MODULE=fcitx
+ENV XMODIFIERS=@im=fcitx
+ENV QT_IM_MODULE=fcitx
+ENV DefaultIMModule=fcitx
+RUN sudo locale-gen ja_JP.UTF-8
+ENV LANG ja_JP.UTF-8
+ENV LANGUAGE ja_JP:ja
+ENV LC_ALL=ja_JP.UTF-8
+#RUN echo "sed -i 's/TriggerKey=CTRL_SPACE ZENKAKUHANKAKU/TriggerKey=CTRL_SPACE ALT_\`/g' /home/$USERNAME/.config/fcitx/config" >> /home/$USERNAME/.bashrc
+#RUN echo "echo \"[Hotkey]\" > /home/$USERNAME/.config/fcitx/config" >> /home/$USERNAME/.bashrc
+#RUN echo "echo \"TriggerKey=CTRL_SPACE ALT_\\\`\" >> /home/$USERNAME/.config/fcitx/config" >> /home/$USERNAME/.bashrc
+RUN mkdir -p /home/$USERNAME/.config/fcitx
+RUN echo "[Hotkey]" > /home/$USERNAME/.config/fcitx/config
+RUN echo "TriggerKey=CTRL_SPACE ALT_\`" >> /home/$USERNAME/.config/fcitx/config
+
+#RUN echo "/usr/bin/fcitx-autostart < /dev/null 2> /dev/null > /dev/null &" | sudo tee /etc/init.d/fcitx-startup.sh
+#RUN sudo chmod +x /etc/init.d/fcitx-startup.sh
+
 # Make a couple folders for organizing docker volumes
 #RUN mkdir ~/workspaces ~/other
 
