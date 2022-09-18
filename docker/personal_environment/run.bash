@@ -25,13 +25,6 @@ XAUTH=/tmp/.docker.xauth
 
 DOCKER_OPTS=
 
-# Share your vim settings.
-VIMRC=~/.vimrc
-if [ -f $VIMRC ]
-then
-  DOCKER_OPTS="$DOCKER_OPTS -v $VIMRC:/home/developer/.vimrc:ro"
-fi
-
 for WS_DIR in ${WORKSPACES[@]}
 do
   WS_DIRNAME=$(basename $WS_DIR)
