@@ -22,6 +22,10 @@ RUN apt-get update \
         wget \
  && apt-get clean
 
+# time zone
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y tzdata
+
 # Add a user with the same user_id as the user outside the container
 # Requires a docker build argument `user_id`
 ARG user_id
@@ -76,7 +80,6 @@ RUN sudo apt-get update \
 RUN echo "set expandtab"     > /home/$USERNAME/.vimrc \
  && echo "set tabstop=2"    >> /home/$USERNAME/.vimrc \
  && echo "set shiftwidth=2" >> /home/$USERNAME/.vimrc
-
 
 # Setup locale
 RUN sudo localedef -f UTF-8 -i ja_JP ja_JP.utf8
