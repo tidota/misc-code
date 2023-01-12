@@ -17,5 +17,35 @@ https://www.youtube.com/watch?v=tPYj3fFJGjk&ab_channel=freeCodeCamp.org
 
 I copied the Colab notebooks and tried to run the code for practice. The rest of this page is personal notes of each Colab notebook or just tables of contents in the other mark-down pages.
 
-# Module 2
+# Module 2 (Tensorflow)
 
+Installation
+```
+pip install tensorflow
+pip install tensorflow-gpu
+```
+
+Import
+```
+import tensorflow as tf
+```
+
+Data type
+- `tf.string`
+- `tf.int16`
+- `tf.float64`
+etc
+
+Creating data
+```
+tns = tf.Variable([["abc", "def"], ["ghi", "jkl"]], tf.string)
+tns2 = tf.ones([1,2,3])
+tns3 = tf.reshape(tns2, [2, 3])
+```
+
+Information about a tensor
+```
+tf.rank(tns)     # shows the rank and data type
+tns.shape        # shows the numbers of items at each dimension
+len(tns.shape)   # gives the rank number
+```
