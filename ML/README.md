@@ -49,3 +49,48 @@ tf.rank(tns)     # shows the rank and data type
 tns.shape        # shows the numbers of items at each dimension
 len(tns.shape)   # gives the rank number
 ```
+
+# Module 3 (Core learning algorithms)
+
+
+## Linear regression
+
+### Simple linear regression
+
+numpy has a feature for linear regression
+```
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = [1, 2, 2.5, 3, 4]
+y = [1, 4, 7, 9, 15]
+plt.plot(x, y, 'ro')
+plt.axis([0, 6, 0, 20])
+
+plt.plot(x, y, 'ro')
+plt.axis([0, 6, 0, 20])
+params = np.polyfit(x, y, 1)
+func = np.poly1d(params)
+plt.plot(np.unique(x), func(np.unique(x)))
+plt.show()
+```
+
+### More complicated linear regression
+
+```
+pip install -q sklearn
+```
+
+```
+from __future__ import absolute_import, division, print_function, unicode_literals
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from IPython.display import clear_output
+from six.moves import urllib
+
+import tensorflow.compat.v2.feature_column as fc
+
+import tensorflow as tf
+```
