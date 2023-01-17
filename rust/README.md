@@ -10,14 +10,24 @@ To install Rust compiler
 ```
 curl --proto '=https' --tlsv1.3 https://sh.rustup.rs -sSf | sh
 ```
+
 To check the version
 ```
 rustc --version
 ```
+
 To update Rust
 ```
 rustup update
 ```
+
+To check the documentation
+```
+rustup doc
+```
+Note that some hack is necessary for Windows/WSL
+https://azechi-n.hatenadiary.com/entry/2021/01/01/142027
+
 To uninstall Rust
 ```
 rustup self uninstall
