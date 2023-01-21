@@ -54,3 +54,33 @@ For example,
 ```
 rustc main.rs
 ```
+
+# Cargo
+
+To check the version
+```
+cargo --version
+```
+
+To create a new project
+```
+cargo new project_name
+```
+
+To check (check if it is compilable)
+```
+cargo check
+```
+To build and run
+```
+cargo run
+```
+
+To build
+```
+cargo build
+```
+To build a release version
+```
+cargo build --release
+```
