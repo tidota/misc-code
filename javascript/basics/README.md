@@ -1,0 +1,3 @@
+# practice of basics
+
+This is just personal practices to the basics of javascript...
