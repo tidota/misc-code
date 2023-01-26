@@ -94,3 +94,43 @@ import tensorflow.compat.v2.feature_column as fc
 
 import tensorflow as tf
 ```
+
+Data loading
+```
+dftrain = pd.read_csv('https://storage.googleapis.com/tf-datasets/titanic/train.csv') # training data
+dfeval = pd.read_csv('https://storage.googleapis.com/tf-datasets/titanic/eval.csv') # testing data
+y_train = dftrain.pop('survived')
+y_eval = dfeval.pop('survived')
+```
+
+Data inspection
+```
+dftrain.head(10)
+dftrain.describe()
+dftrain.shape
+y_train.head()
+dftrain.age.hist(bins=20)
+dftrain.sex.value_counts().plot(kind='barh')
+dftrain['class'].value_counts().plot(kind='barh')
+pd.concat([dftrain, y_train], axis=1).groupby('sex').survived.mean().plot(kind='barh').set_xlabel('% survive')
+```
+
+Preparation of Inputs and the model
+```
+CATEGORICAL_COLUMNS = ['sex', 'n_siblings_spouses', 'parch', 'class', 'deck',
+                       'embark_town', 'alone']
+NUMERIC_COLUMNS = ['age', 'fare']
+
+feature_columns = []
+for feature_name in CATEGORICAL_COLUMNS:
+  vocabulary = dftrain[feature_name].unique()  # gets a list of all unique values from given feature column
+  feature_columns.append(tf.feature_column.categorical_column_with_vocabulary_list(feature_name, vocabulary))
+
+for feature_name in NUMERIC_COLUMNS:
+  feature_columns.append(tf.feature_column.numeric_column(feature_name, dtype=tf.float32))
+
+linear_est = tf.estimator.LinearClassifier(feature_columns=feature_columns)
+```
+
+
+TODO: functions? and training?
