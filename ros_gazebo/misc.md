@@ -15,3 +15,9 @@ Then,
 ```
 rosrun tf2_tools view_frames.py
 ```
+
+# build systems and tools?
+
+There are many jargons such as catkin, catkin build, colcon, etc...
+
+https://design.ros2.org/articles/build_tool.html
