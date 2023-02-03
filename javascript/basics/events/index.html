@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        // https://www.w3schools.com/jsref/dom_obj_event.asp
+        function onClick() {
+            document.getElementById("demo").innerHTML = "The buttonClicked!";
+        }
+        function onMouseOver() {
+            document.getElementById("demo").innerHTML = "Mouse over!";
+        }
+        function onMouseOut() {
+            document.getElementById("demo").innerHTML = "Mouse out!";
+        }
+    </script>
+</head>
+<body>
+
+<h1>My First Web Page</h1>
+<p>My first paragraph.</p>
+
+<p id="demo" onmouseover="onMouseOver()" onmouseout="onMouseOut()">text</p>
+
+<button id="button" type="button" onclick="onClick()">test</button>
+
+</body>
+</html>
