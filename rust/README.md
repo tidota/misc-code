@@ -57,6 +57,8 @@ rustc main.rs
 
 # Cargo
 
+Notes of some jargons: Cargo is a pckage manager. A Rust package is called a "crate". Sometimes they mention a "trait", but it is a kind of function prototype?
+
 To check the version
 ```
 cargo --version
@@ -83,4 +85,9 @@ cargo build
 To build a release version
 ```
 cargo build --release
+```
+
+To check dependencies
+```
+cargo doc --open
 ```
