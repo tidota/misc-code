@@ -20,9 +20,13 @@ plt.plot(np.unique(x), func(np.unique(x)))
 plt.show()
 ```
 
-# More complicated linear regression
+-------------------------------------------------------------------------
 
-## Setup
+# More complicated linear regression by using tensorflow
+
+This looks like just classification? But unlike the one in [the page](./classification.md), this also handles categorical values.
+
+# Setup
 ```
 pip install -q sklearn
 ```
@@ -41,7 +45,7 @@ import tensorflow.compat.v2.feature_column as fc
 import tensorflow as tf
 ```
 
-## Data loading
+# Load data
 ```
 dftrain = pd.read_csv('https://storage.googleapis.com/tf-datasets/titanic/train.csv') # training data
 dfeval = pd.read_csv('https://storage.googleapis.com/tf-datasets/titanic/eval.csv') # testing data
@@ -49,7 +53,7 @@ y_train = dftrain.pop('survived')
 y_eval = dfeval.pop('survived')
 ```
 
-## Data inspection
+# Inspect data
 ```
 dftrain.head(10)
 dftrain.describe()
@@ -61,7 +65,8 @@ dftrain['class'].value_counts().plot(kind='barh')
 pd.concat([dftrain, y_train], axis=1).groupby('sex').survived.mean().plot(kind='barh').set_xlabel('% survive')
 ```
 
-## Preparation of Inputs and the model
+# Create a classifier
+Note that this step requires the input data for categorical clumns.
 ```
 CATEGORICAL_COLUMNS = ['sex', 'n_siblings_spouses', 'parch', 'class', 'deck',
                        'embark_town', 'alone']
@@ -74,11 +79,10 @@ for feature_name in CATEGORICAL_COLUMNS:
 
 for feature_name in NUMERIC_COLUMNS:
   feature_columns.append(tf.feature_column.numeric_column(feature_name, dtype=tf.float32))
-
 linear_est = tf.estimator.LinearClassifier(feature_columns=feature_columns)
 ```
 
-## Convert the inputs to the `tf.data.Dataset` object
+# Convert the inputs to the `tf.data.Dataset` object
 ```
 def make_input_fn(data_df, label_df, num_epochs=10, shuffle=True, batch_size=32):
   def input_function():  # inner function, this will be returned
@@ -93,9 +97,13 @@ train_input_fn = make_input_fn(dftrain, y_train)  # here we will call the input_
 eval_input_fn = make_input_fn(dfeval, y_eval, num_epochs=1, shuffle=False)
 ```
 
-## Training
+# Training
 ```
 linear_est.train(train_input_fn)  # train
+```
+
+# Testing
+```
 result = linear_est.evaluate(eval_input_fn)  # get model metrics/stats by testing on tetsing data
 
 clear_output()  # clears console output
@@ -103,7 +111,7 @@ print(result)
 print(result['accuracy'])  # the result variable is simply a dict of stats about our model
 ```
 
-## Evaluation
+# Evaluation
 ```
 pred_dicts = list(linear_est.predict(eval_input_fn))
 print(pred_dicts)

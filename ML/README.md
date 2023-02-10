@@ -56,4 +56,4 @@ len(tns.shape)   # gives the rank number
 
 ## [Classification](./module3/classification.md)
 
-TODO: Classification? (maybe, the file should be divided)
+TODO: Hidden Markov Models (create a separate file)
