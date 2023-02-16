@@ -56,4 +56,4 @@ len(tns.shape)   # gives the rank number
 
 ## [Classification](./module3/classification.md)
 
-TODO: Hidden Markov Models (create a separate file)
+## [Hidden Markov Models](./module3/hidden_markov_models.md)
