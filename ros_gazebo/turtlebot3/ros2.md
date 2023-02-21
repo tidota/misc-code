@@ -22,6 +22,10 @@ The only difference should be the package names and the `foxy` in each package n
 
    - Run [commands to install dependencies](./ros2_setup/humble.md)
 
+- Setup for the robot
+
+   - Check [setup_robot.md](./ros2_setup/setup_robot.md)
+
 # Real world
 
 Reference: https://emanual.robotis.com/docs/en/platform/turtlebot3/navigation/
