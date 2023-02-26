@@ -53,7 +53,16 @@ len(tns.shape)   # gives the rank number
 # Module 3 (Core learning algorithms)
 
 ## [Linear Regression](./module3/linear_regression.md)
+The example also contains categorial inputs to give a continuous value as output.
+It uses `sklearn`.
 
 ## [Classification](./module3/classification.md)
+Categorial inputs to categorial output.
 
 ## [Hidden Markov Models](./module3/hidden_markov_models.md)
+Continuous values as input to continuous value as output.
+Or more like a probability distribution to a probability distribution.
+
+# Module 4 (Neural Network)
+
+Keras: submodule of tensorflow to provide neural network APIs.
