@@ -2,9 +2,15 @@
 
 # Setup
 
-`node_modules` will be install into the home directory.
 ```
 sudo apt install npm
 cd ~
 npm install typescript --save-dev
 ```
+`node_modules`, `package.json`, `package-lock.json` are created in the home directory.
+
+```
+npx tsc --init
+```
+`tsconfig.json` is created.
+
