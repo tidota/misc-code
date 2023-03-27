@@ -64,6 +64,11 @@ ros2 launch turtlebot3_navigation2 navigation2.launch.py map:=$HOME/test.yaml
 
 Reference: https://emanual.robotis.com/docs/en/platform/turtlebot3/navigation/
 
+To install the simulation package (ROS Humble)
+```
+sudo apt install ros-humble-turtlebot3-gazebo
+```
+
 ## Gazebo
 ```
 ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
