@@ -123,3 +123,7 @@ print('Test accuracy:', test_acc)
 predictions = model.predict(test_images)
 np.argmax(predictions[0])  # should be the same as test_labels[0]
 ```
+
+# Module 5 (Deep Computer Vision)
+
+Convolutional Neural Network
