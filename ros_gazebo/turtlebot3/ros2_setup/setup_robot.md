@@ -16,7 +16,12 @@ Steps
 
 - Download Ubunu 22.04 Server from https://ubuntu.com/download/raspberry-pi
 
-- Unzip the file and burn the .img file to an SD card
+- Unzip the file
+
+   ```
+   unxz ubuntu-22.04.2-preinstalled-server-arm64+raspi.img.xz 
+   ```
+- burn the .img file to an SD card by Raspberry Pi Imager
 
 - Hardware settings to setup
 
