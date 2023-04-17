@@ -127,3 +127,9 @@ np.argmax(predictions[0])  # should be the same as test_labels[0]
 # Module 5 (Deep Computer Vision)
 
 Convolutional Neural Network
+
+- Feature maps -> Response maps
+- Pooling: downsampling and resizing layers
+- Conv -> Dense
+- Data Augmentation
+
