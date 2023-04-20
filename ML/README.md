@@ -128,8 +128,9 @@ np.argmax(predictions[0])  # should be the same as test_labels[0]
 
 Convolutional Neural Network
 
+Just a list of words
 - Feature maps -> Response maps
 - Pooling: downsampling and resizing layers
 - Conv -> Dense
 - Data Augmentation
-
+- Pretrained models with fine tuning
