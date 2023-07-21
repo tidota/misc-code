@@ -5,12 +5,7 @@ The instructions for Foxy are available at https://emanual.robotis.com/docs/en/p
 The instructions below are for Humble.
 
 
-TODO:
-- go to https://emanual.robotis.com/docs/en/platform/turtlebot3/sbc_setup/
-- Check Manual SBS setup instructions
-
-- Does ubuntu 22.04 has different wifi settings?
-   networkd? NetworkManager?
+Go to https://emanual.robotis.com/docs/en/platform/turtlebot3/sbc_setup/
 
 Steps
 
@@ -66,3 +61,27 @@ Steps
 
          - `sudo reboot`
 
+- Download `install_ros2_humble_rpi.sh` and run it
+
+- Run the following commands
+
+```
+sudo apt install python3-argcomplete python3-colcon-common-extensions libboost-system-dev build-essential
+sudo apt install ros-humble-hls-lfcd-lds-driver
+sudo apt install ros-humble-turtlebot3-msgs
+sudo apt install ros-humble-dynamixel-sdk
+mkdir -p ~/turtlebot3_ws/src && cd ~/turtlebot3_ws/src
+git clone -b humble-devel https://github.com/ROBOTIS-GIT/turtlebot3.git
+cd ~/turtlebot3_ws/src/turtlebot3
+rm -r turtlebot3_cartographer turtlebot3_navigation2
+cd ~/turtlebot3_ws/
+echo 'source /opt/ros/humble/setup.bash' >> ~/.bashrc
+source ~/.bashrc
+colcon build --symlink-install --parallel-workers 1
+echo 'source ~/turtlebot3_ws/install/setup.bash' >> ~/.bashrc
+source ~/.bashrc
+```
+
+Note `colcon build` may hung up.
+https://github.com/ROBOTIS-GIT/turtlebot3/issues/460
+https://github.com/ROBOTIS-GIT/turtlebot3/issues/965
