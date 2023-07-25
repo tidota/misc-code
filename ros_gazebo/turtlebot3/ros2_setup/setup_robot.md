@@ -7,7 +7,7 @@ The instructions below are for Humble.
 
 Go to https://emanual.robotis.com/docs/en/platform/turtlebot3/sbc_setup/
 
-Steps
+## Steps to setup Raspberry Pi
 
 - Download Ubunu 22.04 Server from https://ubuntu.com/download/raspberry-pi
 
@@ -85,3 +85,35 @@ source ~/.bashrc
 Note `colcon build` may hung up.
 https://github.com/ROBOTIS-GIT/turtlebot3/issues/460
 https://github.com/ROBOTIS-GIT/turtlebot3/issues/965
+
+- Run the following commands
+
+```
+sudo cp `ros2 pkg prefix turtlebot3_bringup`/share/turtlebot3_bringup/script/99-turtlebot3-cdc.rules /etc/udev/rules.d/
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+echo 'export ROS_DOMAIN_ID=30 #TURTLEBOT3' >> ~/.bashrc
+source ~/.bashrc
+```
+
+- Run the following commands (this is for LDS-01)
+
+```
+echo 'export LDS_MODEL=LDS-01' >> ~/.bashrc
+source ~/.bashrc
+```
+
+## Steps to setup OpenRC
+
+```
+sudo dpkg --add-architecture armhf
+sudo apt update
+sudo apt install libc6:armhf
+export OPENCR_PORT=/dev/ttyACM0
+export OPENCR_MODEL=burger
+rm -rf ./opencr_update.tar.bz2
+wget https://github.com/ROBOTIS-GIT/OpenCR-Binaries/raw/master/turtlebot3/ROS2/latest/opencr_update.tar.bz2
+tar -xvf ./opencr_update.tar.bz2
+cd ~/opencr_update
+./update.sh $OPENCR_PORT $OPENCR_MODEL.opencr
+```
