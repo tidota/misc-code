@@ -38,6 +38,14 @@ Find the IP of turtlebot3
 ```
 arp -a
 ```
+Another way is arp-scan
+```
+sudo arp-scan -I <interface name> <network>
+```
+example
+```
+sudo arp-scan -I wlan 192.168.0.0/24
+```
 
 Log in to turtlebot3 by SSH
 ```
@@ -46,6 +54,7 @@ ssh ubuntu@<IP address>
 
 Then, launch the file.
 ```
+export TURTLEBOT3_MODEL=burger
 ros2 launch turtlebot3_bringup robot.launch.py
 ```
 
