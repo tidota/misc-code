@@ -58,6 +58,18 @@ export TURTLEBOT3_MODEL=burger
 ros2 launch turtlebot3_bringup robot.launch.py
 ```
 
+## teleop
+
+```
+ros2 run joy joy_node
+```
+
+### xbox
+
+```
+ros2 launch teleop_twist_joy teleop-launch.py joy_config:='xbox'
+```
+
 ## SLAM
 ```
 ros2 launch turtlebot3_cartographer cartographer.launch.py
