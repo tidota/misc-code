@@ -71,15 +71,28 @@ ros2 launch teleop_twist_joy teleop-launch.py joy_config:='xbox'
 ```
 
 ## SLAM
+To build a map
 ```
 ros2 launch turtlebot3_cartographer cartographer.launch.py
+```
+To save the built map
+```
 ros2 run nav2_map_server map_saver_cli -f ~/test
 ```
+
+cartographer:
+- cartographer.launch.py
+- occupancy_grid.launch.py
+
 
 ## Navigation
 ```
 ros2 launch turtlebot3_navigation2 navigation2.launch.py map:=$HOME/test.yaml
 ```
+navigation2.launch.py uses this launch file.
+nav2_bringup:
+- bringup_launch.py
+And this launch file also uses others?
 
 # Simulation
 
@@ -96,8 +109,12 @@ ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
 ```
 
 ## SLAM
+To build a map,
 ```
 ros2 launch turtlebot3_cartographer cartographer.launch.py
+```
+To save the built map
+```
 ros2 run nav2_map_server map_saver_cli -f ~/map
 ```
 
