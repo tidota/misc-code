@@ -77,7 +77,7 @@ ros2 launch turtlebot3_cartographer cartographer.launch.py
 ```
 To save the built map
 ```
-ros2 run nav2_map_server map_saver_cli -f ~/test
+ros2 run nav2_map_server map_saver_cli -f ~/map
 ```
 
 cartographer:
@@ -87,12 +87,25 @@ cartographer:
 
 ## Navigation
 ```
-ros2 launch turtlebot3_navigation2 navigation2.launch.py map:=$HOME/test.yaml
+ros2 launch turtlebot3_navigation2 navigation2.launch.py map:=$HOME/map.yaml
 ```
 navigation2.launch.py uses this launch file.
 nav2_bringup:
 - bringup_launch.py
 And this launch file also uses others?
+
+Note: in case of some error complaining about nav2, edit `/opt/ros/humble/share/turtlebot3_navigation2/param/burger.yaml`
+and change the value of `robot_model_type` as follows.
+```
+    robot_model_type: "nav2_amcl::DifferentialMotionModel"
+```
+As of 8/20/2023, the debian package does not have this fix, so this parameter must be manually edited.
+
+Even after the fix above, the AMCL gives this error.
+```
+[amcl]: AMCL cannot publish a pose or update the transform. Please set the initial pose...
+```
+But once the pose is manually set through rviz, it starts to work!
 
 # Simulation
 
