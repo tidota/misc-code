@@ -41,8 +41,17 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
 RUN rosdep update
 
-RUN /bin/sh -c 'echo ". /opt/ros/noetic/setup.bash" >> ~/.bashrc' \
- && /bin/sh -c 'echo ". /usr/share/gazebo/setup.sh" >> ~/.bashrc'
+RUN /bin/sh -c 'echo ". /opt/ros/noetic/setup.bash" >> ~/.bashrc'
+
+RUN sudo apt-get update \
+ && sudo apt-get install -y lsb-release wget gnupg \
+ && sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
+ && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
+ && sudo apt-get update \
+ && sudo apt-get install -y gz-garden
+
+RUN sudo apt install -y ros-noetic-ros-ign-gazebo \
+ && sudo apt install -y ros-noetic-ros-ign-gazebo-demos
 
 # Customize your image here.
 # E.g.:
