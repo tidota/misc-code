@@ -43,15 +43,12 @@ RUN rosdep update
 
 RUN /bin/sh -c 'echo ". /opt/ros/noetic/setup.bash" >> ~/.bashrc'
 
-RUN sudo apt-get update \
- && sudo apt-get install -y lsb-release wget gnupg \
- && sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
- && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
- && sudo apt-get update \
- && sudo apt-get install -y gz-garden
-
-RUN sudo apt install -y ros-noetic-ros-ign-gazebo \
- && sudo apt install -y ros-noetic-ros-ign-gazebo-demos
+# Install (Ignition) gazebo
+# https://github.com/gazebosim/ros_gz/tree/noetic
+RUN sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
+ && sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 \
+ && sudo apt-get update
+RUN sudo apt install -y ros-noetic-ros-ign
 
 # Customize your image here.
 # E.g.:
