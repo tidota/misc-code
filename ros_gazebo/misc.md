@@ -2,6 +2,22 @@
 
 This is just my miscellaneous notes that are not a part of projects but somewhat personally helpful.
 
+# Gazebo Sim (Ignition Gazebo)
+
+```
+roslaunch ros_ign_gazebo_demos diff_drive.launch
+```
+Gazebo sim, the bridge node, and rviz will run.
+
+```
+rostopic pub /model/vehicle_blue/cmd_vel geometry_msgs/Twist "{linear: {x: 5.0}, angular: {z: 0.5}}"
+```
+A node publishing twist messages will run.
+
+# URDF in Ignition Gazebo?
+https://github.com/ROBOTIS-GIT/turtlebot3_simulations/tree/feature-ign_gazebo/turtlebot3_ignition/urdf
+generic plugins are used?
+
 # view_frames
 
 `rosrun tf view_frames` no longer works on Noetic?
