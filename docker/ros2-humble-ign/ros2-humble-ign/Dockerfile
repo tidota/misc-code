@@ -108,6 +108,18 @@ RUN sudo sh -c 'echo "deb [arch=$(dpkg --print-architecture)] http://packages.ro
  && sudo apt-get update
 RUN sudo apt install -y ros-humble-ros-gz
 
+# Setup the Ignition version of Turtlebot3
+# Before the setup, install ros-humble-ros-ign* packages
+# The repo is using ros_ign_gazebo, which is deprecated and to be replaced with ros_gz
+RUN sudo apt install -y ros-humble-ros-ign*
+RUN mkdir -p ~/turtlebot_wc/src \
+ && cd turtlebot_wc/src \
+ && git clone -b feature-ign_gazebo https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git
+# RUN cd ~/turtlebot_wc \
+#  && /bin/bash -c 'source /opt/ros/humble/setup.bash' \
+#  && /bin/bash -c 'colcon build --symlink-install' \
+#  && /bin/bash -c 'source install/setup.bash'
+
 #RUN sudo rosdep init \
 # && sudo apt-get clean
 
