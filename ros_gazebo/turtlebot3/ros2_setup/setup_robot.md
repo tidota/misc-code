@@ -28,6 +28,8 @@ Go to https://emanual.robotis.com/docs/en/platform/turtlebot3/sbc_setup/
    
    - Power on and log in (ubuntu/ubuntu)
 
+      - in case the font is too small: https://askubuntu.com/questions/1402246/how-change-the-font-size-in-ubuntu-server-20-04-lts
+
       - edit files
 
          - `sudo nano /etc/apt/apt.conf.d/20auto-upgrades`
