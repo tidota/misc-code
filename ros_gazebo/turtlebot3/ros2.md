@@ -46,6 +46,51 @@ In `.bashrc` of both the PC and Turtlebot, add `export ROS_DISCOVERY_SERVER=<IP 
 
 Then, source `.bashrc` (`. ~/.bashrc`), and launch the corresponding nodes on Turtlebot and the PC.
 
+### ROS2 commands with the discovery server
+
+To use ros2 commands such as `ros2 topic` and `ros2 node`, addional setup is required: https://docs.ros.org/en/humble/Tutorials/Advanced/Discovery-Server/Discovery-Server.html#ros-2-introspection
+
+Save a file named `super_client_configuration_file.xml` containing the following text:
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+ <dds>
+     <profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles">
+         <participant profile_name="super_client_profile" is_default_profile="true">
+             <rtps>
+                 <builtin>
+                     <discovery_config>
+                         <discoveryProtocol>SUPER_CLIENT</discoveryProtocol>
+                         <discoveryServersList>
+                             <RemoteServer prefix="44.53.00.5f.45.50.52.4f.53.49.4d.41">
+                                 <metatrafficUnicastLocatorList>
+                                     <locator>
+                                         <udpv4>
+                                             <address>127.0.0.1</address>
+                                             <port>11811</port>
+                                         </udpv4>
+                                     </locator>
+                                 </metatrafficUnicastLocatorList>
+                             </RemoteServer>
+                         </discoveryServersList>
+                     </discovery_config>
+                 </builtin>
+             </rtps>
+         </participant>
+     </profiles>
+ </dds>
+```
+
+Then, append `export FASTRTPS_DEFAULT_PROFILES_FILE=<path to super_client_configuration_file.xml>` (replace `<path to super_client_configuration_file.xml>` with the absolute path to the file)
+
+Then, source `.bashrc` (`. ~/.bashrc`), and restart the daemon:
+```
+ros2 daemon stop
+ros2 daemon start
+```
+
+Finally, you can see the topics by `ros2 topic list`.
+
+
 ## Turtlebot3
 
 Note: establish an access point and have turtlebot3 automatically access it
