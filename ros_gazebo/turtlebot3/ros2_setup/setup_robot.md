@@ -65,7 +65,29 @@ Go to https://emanual.robotis.com/docs/en/platform/turtlebot3/sbc_setup/
 
 - Download `install_ros2_humble_rpi.sh` and run it
 
+- Setup the swap memory
+
+`colcon build` in the next step may hung up! You may need to setup the swap memory.
+https://github.com/ROBOTIS-GIT/turtlebot3/issues/460
+https://github.com/ROBOTIS-GIT/turtlebot3/issues/965
+
+On Turtlebot,
+```
+sudo swapoff /swapfile
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+sudo nano /etc/fstab
+```
+
+In `/etc/fstab`, append `/swapfile swap swap defaults 0 0`.
+
+Then, reboot Turtlebot.
+
 - Run the following commands
+
+Note: The line at `colcon build` may take a few hours.
 
 ```
 sudo apt install python3-argcomplete python3-colcon-common-extensions libboost-system-dev build-essential
@@ -83,10 +105,6 @@ colcon build --symlink-install --parallel-workers 1
 echo 'source ~/turtlebot3_ws/install/setup.bash' >> ~/.bashrc
 source ~/.bashrc
 ```
-
-Note `colcon build` may hung up.
-https://github.com/ROBOTIS-GIT/turtlebot3/issues/460
-https://github.com/ROBOTIS-GIT/turtlebot3/issues/965
 
 - Run the following commands
 

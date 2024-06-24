@@ -30,6 +30,22 @@ The only difference should be the package names and the `foxy` in each package n
 
 Reference: https://emanual.robotis.com/docs/en/platform/turtlebot3/navigation/
 
+## Discovery Server (if multicast is blocked by the wifi router)
+
+When the PC and Turtlebot are connected through wifi, there may be an issue that the ROS nodes and topics on Turtlebot are not visible from the PC.
+It may be related to multicast being blocked by the wifi router.
+In such a case, a discovery server needs to run.
+https://docs.ros.org/en/humble/Tutorials/Advanced/Discovery-Server/Discovery-Server.html
+
+Run the discovery server.
+```
+fastdds discovery --server-id 0
+```
+
+In `.bashrc` of both the PC and Turtlebot, add `export ROS_DISCOVERY_SERVER=<IP address>:11811` (Replace `<IP address>` with the IP address of the machine on which the server is running)
+
+Then, source `.bashrc` (`. ~/.bashrc`), and launch the corresponding nodes on Turtlebot and the PC.
+
 ## Turtlebot3
 
 Note: establish an access point and have turtlebot3 automatically access it
