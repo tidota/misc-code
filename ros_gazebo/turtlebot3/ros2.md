@@ -182,6 +182,14 @@ sudo apt install ros-humble-turtlebot3-gazebo
 ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
 ```
 
+Note(2024/10/19): The gzserver seems not to like the settings for the discovery server. Before running a simulation, the following environment variables should be commented out in ~/.bashrc.
+- ROS_DISCOVERY_SERVER
+- FASTRTPS_DEFAULT_PROFILES_FILE
+
+Note(2024/10/19): The gzclient had some issue that it crashes right after launching. The following command fixed the issue: `. /usr/share/gazebo/setup.sh`.
+This should be included in ~/.bashrc.
+For more details: https://answers.ros.org/question/358847/cannot-launch-gzclient-on-a-launch-file-results-in-shared_ptr-assertion-error/
+
 ## SLAM
 To build a map,
 ```
