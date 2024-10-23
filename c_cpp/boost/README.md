@@ -8,9 +8,18 @@ For setups, refer to ./PREPARATION.md
 
 Once they are included in the standards, they should be available under the `std` namespace.
 
-- asio1: simple code to pass a string from the server to the client (since C++)
-- asio2: a server that offers chat rooms (since C++)
-- hello.cpp: setting up the locale (since C++11?)
-- regex.cpp: Regex (since C++11)
-- thread.cpp: Thread (since C++11)
+## asio1
+Simple code to pass a string from the server to the client
+
+## asio2
+A server that offers chat rooms. A bit more compilicated. I may need to add more comments.
+
+## hello.cpp
+Setting up the locale.
+
+## regex.cpp
+Using regex to find strings with a pattern.
+
+## thread.cpp
+Running a thread
 

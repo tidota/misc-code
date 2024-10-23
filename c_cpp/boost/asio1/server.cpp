@@ -35,6 +35,7 @@ int main()
       tcp::socket socket(io_context);
       acceptor.accept(socket);
 
+      // generate a string representing the current time
       std::string message = make_daytime_string();
 
       boost::system::error_code ignored_error;
